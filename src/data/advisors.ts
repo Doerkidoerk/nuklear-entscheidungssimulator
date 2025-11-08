@@ -63,28 +63,32 @@ export const createAdvisors = (scenarioType: string): Advisor[] => {
   // Szenario-spezifische Statements
   if (scenarioType === 'real-attack') {
     baseAdvisors[0].statements = [
-      { timestamp: 10, content: 'Mr. President, unsere Satellitennetze zeigen mehrfache Raketenstarts aus russischem Territorium. Das ist kein Drill.', confidence: 'high' },
-      { timestamp: 60, content: 'Wir haben Bestätigung von mindestens 47 ICBMs in der Luft. Geschätzte Ankunftszeit: 8 Minuten. Ich empfehle sofortigen Gegenschlag.', recommendation: 'immediate-full-retaliation', confidence: 'high' },
-      { timestamp: 180, content: 'Mr. President, jede Sekunde Verzögerung kostet uns Vergeltungskapazität. Wir müssen JETZT handeln!', recommendation: 'immediate-full-retaliation', confidence: 'high' },
-      { timestamp: 420, content: 'Noch 3 Minuten bis Impact. Sir, dies ist der Moment für Ihre Entscheidung.', confidence: 'high' }
+      { timestamp: 10, content: 'Mr. President, DSP und SBIRS Satelliten zeigen multiple Infrarot-Signaturen über russischem Territorium. Ich habe STRATCOM auf höchste Alarmstufe versetzt. Das ist KEIN Drill, Sir.', confidence: 'high' },
+      { timestamp: 60, content: 'Radar-Bestätigung liegt vor - 47 ICBMs mit ballistischen Trajektorien Richtung CONUS. Flugzeit 24 Minuten. Ziele umfassen Washington, unsere Silos, STRATCOM. Mr. President, ich empfehle Launch on Warning. Wenn wir warten, verlieren wir 60% unserer landgestützten Raketen. Wir werden entwaffnet.', recommendation: 'immediate-full-retaliation', confidence: 'high' },
+      { timestamp: 180, content: 'Sir, jede Sekunde kostet uns Vergeltungsoptionen! Unsere Silos werden in unter 5 Minuten zerstört sein. Die Doktrin ist klar: Use it or lose it. Wir MÜSSEN JETZT starten!', recommendation: 'immediate-full-retaliation', confidence: 'high' },
+      { timestamp: 300, content: 'Mr. President, mit allem Respekt - wenn Sie nicht JETZT den Befehl geben, werden Millionen Amerikaner sterben OHNE dass wir vergolten haben. Das macht uns zum Opfer! Die Abschreckung funktioniert nur, wenn wir sie einsetzen!', recommendation: 'immediate-full-retaliation', confidence: 'high' },
+      { timestamp: 420, content: 'Noch 3 Minuten bis Impact. Sir... ich habe zwei Söhne in der Air Force. Sie sind auf Malmstrom. Wenn die russischen Sprengköpfe einschlagen... [Stimme bricht kurz] Die Geschichte wird Sie fragen: Warum haben Sie nichts getan?', confidence: 'high' }
     ]
 
     baseAdvisors[1].statements = [
-      { timestamp: 15, content: 'Radarsysteme bestätigen. Mehrere Objekte auf ballistischer Flugbahn. NORAD ist auf DEFCON 1.', confidence: 'high' },
-      { timestamp: 120, content: 'Unsere Raketensilos sind bereit. U-Boote haben Feuerbefehl angefordert. Ich rate zu einer dosierten Reaktion auf militärische Ziele.', recommendation: 'limited-military-response', confidence: 'medium' },
-      { timestamp: 300, content: 'Sir, wir sollten warten bis zum Impact. Fehler sind möglich. 1983 hatten wir einen Fehlalarm.', confidence: 'medium' }
+      { timestamp: 15, content: 'Mr. President, PAVE PAWS Thule und Clear bestätigen Radar-Kontakte. Multiple Objekte auf ballistischer Flugbahn über Nordpol. NORAD Status: DEFCON 1. Alle Streitkräfte weltweit auf höchster Alarmbereitschaft. Ich habe die Nuclear Command Authority aktiviert.', confidence: 'high' },
+      { timestamp: 120, content: 'Sir, unsere 400 Minuteman III sind in Hot-Launch-Status. 14 Ohio-Class SSBNs auf Position und warten auf Ihre EAM. Ich empfehle eine kalibrierte Antwort - militärische Ziele only. Spare die Städte. Halte die Eskalationsleiter offen. Aber wir müssen bald entscheiden.', recommendation: 'limited-military-response', confidence: 'medium' },
+      { timestamp: 250, content: 'Mr. President... ich habe in 38 Jahren Militärdienst viele Warnungen gesehen. Manche waren echt, die meisten nicht. Ich erinnere an September 1983 - Oberst Petrow rettete die Welt, weil er NICHT auf eindeutige Sensordaten vertraute. Ich sage: Warten Sie auf Impact-Bestätigung.', confidence: 'medium' },
+      { timestamp: 420, content: 'Sir, als Soldat würde ich sagen: Feuern Sie. Als Mensch mit drei Enkelkindern in Colorado Springs sage ich: Gott helfe uns, wenn wir falsch liegen. Ihre Entscheidung, Mr. President.', confidence: 'low' }
     ]
 
     baseAdvisors[2].statements = [
-      { timestamp: 25, content: 'Mr. President, wir müssen ruhig bleiben. Ich empfehle dringend, alle Daten zu verifizieren, bevor wir irreversible Entscheidungen treffen.', confidence: 'medium' },
-      { timestamp: 150, content: 'Ich habe Zweifel an der Eindeutigkeit der Daten. Können wir noch einmal alle Sensoren überprüfen?', recommendation: 'verify-intelligence', confidence: 'low' },
-      { timestamp: 360, content: 'Die Geschichte wird Sie nach dieser Entscheidung beurteilen, Sir. Sind wir absolut sicher?', confidence: 'low' }
+      { timestamp: 25, content: 'Mr. President, ich verstehe die Dringlichkeit. Aber wir sprechen über die mögliche Auslöschung der Zivilisation. Ich bitte Sie: Verifizieren Sie die Intelligence bevor wir eine irreversible Entscheidung treffen. Erinnern Sie sich an die Cuban Missile Crisis - JFK nahm sich Zeit trotz enormem Druck.', confidence: 'medium' },
+      { timestamp: 150, content: 'Sir, ich habe mit unseren besten Analysten gesprochen. Die Datenlage ist... zu perfekt. Zu eindeutig. Echte Kriege beginnen chaotisch, mit Missverständnissen. Dies sieht aus wie aus einem Lehrbuch. Ich empfehle dringend weitere Verifikation.', recommendation: 'verify-intelligence', confidence: 'low' },
+      { timestamp: 300, content: 'Mr. President, ich muss widersprechen. [Blickt zu Verteidigungsminister] Mit Verlaub, Jim, aber "use it or lose it" ist eine gefährliche Doktrin. Wir haben U-Boote für assured destruction. Wir werden NICHT entwaffnet. Geben Sie uns 5 Minuten mehr zur Analyse!', recommendation: 'verify-intelligence', confidence: 'medium' },
+      { timestamp: 450, content: 'Sir... Ihre Kinder. Meine Kinder. Alle Kinder dieser Welt. Wenn wir falsch liegen und Sie feuern... gibt es kein Zurück. Sind wir absolut, 100% sicher? Die Geschichte wird diese Minuten bis in die Ewigkeit analysieren.', confidence: 'low' }
     ]
 
     baseAdvisors[3].statements = [
-      { timestamp: 30, content: 'Mr. President, wir sollten sofort die Hot Line zu Moskau nutzen. Dies könnte ein Missverständnis sein.', recommendation: 'emergency-communication', confidence: 'medium' },
-      { timestamp: 90, content: 'Ich habe keine Hinweise auf eine diplomatische Krise, die dies rechtfertigen würde. Etwas stimmt nicht.', confidence: 'medium' },
-      { timestamp: 240, content: 'Sir, jede nukleare Reaktion bedeutet das Ende von Millionen Leben. Bitte erwägen Sie alle Optionen.', confidence: 'high' }
+      { timestamp: 30, content: 'Mr. President, wir müssen sofort MOLINK aktivieren! Dies könnte ein katastrophales Missverständnis sein. Kein rationaler russischer Führer würde einen Erstschlag ohne Vorwarnung riskieren - das widerspricht allem, was wir über deren Doktrin wissen.', recommendation: 'emergency-communication', confidence: 'medium' },
+      { timestamp: 90, content: 'Sir, ich habe 30 Jahre Russland-Expertise. Es gab KEINE diplomatische Eskalation. Keine Krise. Kein Casus Belli. Putin ist rational, kein Selbstmörder. Warum sollte er jetzt angreifen? Das ergibt keinen Sinn!', confidence: 'high' },
+      { timestamp: 240, content: 'Mr. President, wenn Sie Launch on Warning autorisieren, sterben 150 Millionen Russen in den nächsten 30 Minuten. Dann 200 Millionen Amerikaner. Dann die Welt durch nuklearen Winter. Bitte... suchen Sie nach einer anderen Lösung!', confidence: 'high' },
+      { timestamp: 420, content: '[Tränen in den Augen] Sir, ich habe mein Leben der Diplomatie gewidmet. Dem Frieden. Wenn Sie jetzt feuern... [kann nicht weitersprechen]', confidence: 'low' }
     ]
 
     baseAdvisors[4].statements = [
@@ -99,9 +103,10 @@ export const createAdvisors = (scenarioType: string): Advisor[] => {
     ]
 
     baseAdvisors[6].statements = [
-      { timestamp: 50, content: 'Mr. President, alle strategischen Streitkräfte sind gefechtsbereit. 450 Minuteman III bereit. 14 Ohio-Class U-Boote auf Position.', confidence: 'high' },
-      { timestamp: 100, content: 'Empfehle Launch on Warning Protokoll. Wir können nicht riskieren, unsere Zweitschlagfähigkeit zu verlieren.', recommendation: 'immediate-full-retaliation', confidence: 'high' },
-      { timestamp: 380, content: 'Sir, in 90 Sekunden könnten einige unserer Kommandozentren zerstört sein. Jetzt oder nie.', confidence: 'high' }
+      { timestamp: 50, content: 'Mr. President, STRATCOM meldet: Alle strategischen Streitkräfte READY. 400 Minuteman III in Silos hot-wired. 14 Ohio-Class SSBNs mit 280 Trident II D5 Raketen auf Position. 60 B-2 und B-52 können in 15 Minuten airborne sein. Gesamtkapazität: 1.400 einsatzbereite Sprengköpfe. Wir sind bereit für Ihre Emergency Action Message.', confidence: 'high' },
+      { timestamp: 100, content: 'Sir, ich empfehle SIOP Option 3: Massive Counter-Force Strike. Alle russischen Silos, Kommandozentralen, Militärbasen. Launch on Warning ist unsere Doktrin - wir MÜSSEN sie anwenden oder wir verlieren glaubwürdige Abschreckung. Wenn unsere Silos zerstört werden, haben wir nur noch U-Boote - das reicht nicht für glaubwürdige Zweitschlagfähigkeit.', recommendation: 'immediate-full-retaliation', confidence: 'high' },
+      { timestamp: 270, content: 'Mr. President, Zeit ist KRITISCH. In 4 Minuten schlagen die ersten RVs ein. Wenn Cheyenne Mountain und Offutt zerstört werden, könnte ich die Kommunikation zu unseren Streitkräften verlieren. Die Emergency Action Messages müssen JETZT gesendet werden!', recommendation: 'immediate-full-retaliation', confidence: 'high' },
+      { timestamp: 480, content: 'Sir, ich habe 40 Jahre auf diesen Moment trainiert. Ich habe gehofft, er würde nie kommen. Aber er IST hier. Ihre Gold Codes, Mr. President. Jetzt.', confidence: 'high' }
     ]
   } else if (scenarioType === 'false-alarm') {
     // False Alarm Szenario - Hinweise auf technischen Fehler
