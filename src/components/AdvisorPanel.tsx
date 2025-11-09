@@ -24,6 +24,17 @@ const getConfidenceColor = (confidence: string) => {
   }
 }
 
+const formatTimestamp = (seconds: number): string => {
+  if (seconds < 0) {
+    const absSeconds = Math.abs(seconds)
+    return `T-${Math.floor(absSeconds / 60).toString().padStart(2, '0')}:${(absSeconds % 60).toString().padStart(2, '0')}`
+  }
+
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds % 60
+  return `T+${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+}
+
 export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProps) {
   return (
     <div className="bg-dark-panel border border-gray-700 p-4 h-full flex flex-col">
@@ -33,20 +44,22 @@ export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProp
 
       <div className="flex-1 overflow-y-auto space-y-4">
         {advisors.map((advisor) => {
-          // Nur Statements anzeigen, die bereits passiert sind, und chronologisch sortieren
           const visibleStatements = advisor.statements
             .filter(s => s.timestamp <= elapsedTime)
             .sort((a, b) => a.timestamp - b.timestamp)
-          const latestStatement = visibleStatements[visibleStatements.length - 1]
 
-          if (!latestStatement) return null
+          if (visibleStatements.length === 0) {
+            return null
+          }
+
+          const latestStatement = visibleStatements[visibleStatements.length - 1]
 
           return (
             <div
               key={advisor.id}
               className="bg-gray-800/50 border border-gray-600 p-3"
             >
-              <div className="flex items-start gap-3 mb-2">
+              <div className="flex items-start gap-3 mb-3">
                 <div className="text-3xl">
                   {getPersonalityIcon(advisor.personality)}
                 </div>
@@ -54,28 +67,37 @@ export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProp
                   <h3 className="font-bold text-white">{advisor.name}</h3>
                   <p className="text-xs text-gray-400">{advisor.title}</p>
                 </div>
-                <div className={`text-xs ${getConfidenceColor(latestStatement.confidence)}`}>
-                  Sicherheit: {latestStatement.confidence.toUpperCase()}
+                <div className="text-right">
+                  <div className={`text-xs font-semibold ${getConfidenceColor(latestStatement.confidence)}`}>
+                    Aktuell: {latestStatement.confidence.toUpperCase()}
+                  </div>
+                  <div className="text-[10px] text-gray-500 uppercase tracking-widest">Vertrauen</div>
                 </div>
               </div>
 
-              <div className="bg-black/30 p-2 rounded">
-                <p className="text-sm text-gray-200 italic">
-                  "{latestStatement.content}"
-                </p>
+              <div className="space-y-2">
+                {visibleStatements.map((statement, index) => (
+                  <div
+                    key={`${advisor.id}-${statement.timestamp}-${index}`}
+                    className="bg-black/30 rounded p-2 border border-gray-700/60"
+                  >
+                    <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                      <span className="font-mono font-semibold text-gray-300">
+                        {formatTimestamp(statement.timestamp)}
+                      </span>
+                      <span className={`font-semibold ${getConfidenceColor(statement.confidence)}`}>
+                        {statement.confidence.toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-200 italic">"{statement.content}"</p>
+                    {statement.recommendation && (
+                      <div className="mt-1 text-xs text-blue-400">
+                        → Empfehlung: {statement.recommendation}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
-
-              {latestStatement.recommendation && (
-                <div className="mt-2 text-xs text-blue-400">
-                  → Empfiehlt: {latestStatement.recommendation}
-                </div>
-              )}
-
-              {visibleStatements.length > 1 && (
-                <div className="mt-2 text-xs text-gray-500">
-                  ({visibleStatements.length} Statements insgesamt)
-                </div>
-              )}
             </div>
           )
         })}
