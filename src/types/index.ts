@@ -12,6 +12,7 @@ export interface Scenario {
   decisions: Decision[]
   correctDecision?: string // ID der historisch "richtigen" Entscheidung
   historicalContext: string
+  trajectories?: ICBMTrajectory[] // Optional: ICBM-Flugbahnen für die Bedrohungskarte
 }
 
 // Bedrohungslevel
