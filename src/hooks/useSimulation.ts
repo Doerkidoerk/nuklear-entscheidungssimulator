@@ -57,9 +57,10 @@ export const useSimulation = (scenario: Scenario) => {
         phase: prev.currentPhase,
       }
 
-      // Folge-Events vorbereiten
-      const followUpEvents = (decision.followUpEvents || []).map(event => ({
+      // Folge-Events vorbereiten mit eindeutigen IDs
+      const followUpEvents = (decision.followUpEvents || []).map((event, index) => ({
         ...event,
+        id: `${event.id}-decision-${decision.id}-${index}-${Date.now()}`, // Eindeutige ID für Follow-up Events
         // Wenn relativ zur Entscheidung, füge die aktuelle Zeit hinzu
         timestamp: event.relativeToDecision
           ? prev.elapsedTime + event.triggerDelay
@@ -148,7 +149,16 @@ export const useSimulation = (scenario: Scenario) => {
         ...prev,
         elapsedTime: elapsed,
         remainingTime: remaining,
-        receivedEvents: [...prev.receivedEvents, ...newEvents].sort((a, b) => b.timestamp - a.timestamp),
+        receivedEvents: [...prev.receivedEvents, ...newEvents]
+          .sort((a, b) => {
+            // Primär nach Timestamp sortieren (neueste zuerst)
+            if (b.timestamp !== a.timestamp) {
+              return b.timestamp - a.timestamp
+            }
+            // Sekundär nach Priorität sortieren bei gleichem Timestamp
+            const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 }
+            return priorityOrder[a.priority] - priorityOrder[b.priority]
+          }),
         currentThreatLevel: newThreatLevel,
         pendingFollowUpEvents: remainingPendingEvents,
         isRunning: !shouldEndNow && remaining > 0,

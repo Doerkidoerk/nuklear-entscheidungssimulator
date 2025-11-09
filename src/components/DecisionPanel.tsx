@@ -113,7 +113,7 @@ export default function DecisionPanel({
 
   return (
     <div className="bg-dark-panel border border-gray-700 p-4 h-full flex flex-col">
-      <h2 className="text-xl font-bold text-white mb-2 flex items-center justify-between">
+      <h2 className="text-xl font-bold text-white mb-2 flex items-center justify-between flex-shrink-0">
         <span className="flex items-center">
           <span className="mr-2">⚡</span> HANDLUNGSOPTIONEN
         </span>
@@ -124,7 +124,7 @@ export default function DecisionPanel({
 
       {/* Entscheidungshistorie */}
       {decisionHistory.length > 0 && (
-        <div className="mb-3 p-2 bg-gray-800/50 border border-gray-600 rounded">
+        <div className="mb-3 p-2 bg-gray-800/50 border border-gray-600 rounded flex-shrink-0">
           <div className="text-xs text-gray-400 mb-1">Vorherige Entscheidungen:</div>
           <div className="space-y-1">
             {decisionHistory.map((entry, index) => (
@@ -138,7 +138,7 @@ export default function DecisionPanel({
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto space-y-3">
+      <div className="flex-1 overflow-y-auto space-y-3 min-h-0">
         {decisions.length === 0 && !disabled && (
           <div className="text-center text-gray-400 py-8">
             <p className="mb-2">Keine weiteren Entscheidungen verfügbar</p>
@@ -180,7 +180,7 @@ export default function DecisionPanel({
       </div>
 
       {disabled && (
-        <div className="mt-4 bg-gray-800 border border-gray-600 p-3 text-center">
+        <div className="mt-4 bg-gray-800 border border-gray-600 p-3 text-center flex-shrink-0">
           <p className="text-gray-400 text-sm">
             Entscheidung bereits getroffen oder Simulation beendet
           </p>

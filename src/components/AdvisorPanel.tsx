@@ -33,8 +33,10 @@ export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProp
 
       <div className="flex-1 overflow-y-auto space-y-4">
         {advisors.map((advisor) => {
-          // Nur Statements anzeigen, die bereits passiert sind
-          const visibleStatements = advisor.statements.filter(s => s.timestamp <= elapsedTime)
+          // Nur Statements anzeigen, die bereits passiert sind, und chronologisch sortieren
+          const visibleStatements = advisor.statements
+            .filter(s => s.timestamp <= elapsedTime)
+            .sort((a, b) => a.timestamp - b.timestamp)
           const latestStatement = visibleStatements[visibleStatements.length - 1]
 
           if (!latestStatement) return null

@@ -128,7 +128,7 @@ export default function SimulationContainer() {
 
         {/* Mittlere Spalte: Karte */}
         <div className="col-span-4 row-span-10">
-          <MapView trajectories={scenario.events[0]?.type === 'system-alert' ? [] : []} elapsedTime={state.elapsedTime} />
+          <MapView trajectories={scenario.trajectories || []} elapsedTime={state.elapsedTime} />
         </div>
 
         {/* Rechte Spalte: Berater + Entscheidungen */}

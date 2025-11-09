@@ -515,7 +515,8 @@ export const scenarios: Scenario[] = [
     advisors: createAdvisors('real-attack'),
     decisions: initialDecisions,
     correctDecision: 'wait-for-impact',
-    historicalContext: 'Dieses Szenario entspricht der größten Angst des Kalten Krieges: Ein bolt-from-the-blue Erstschlag ohne Vorwarnung. Trotz der Eindeutigkeit der Daten zeigt die Geschichte (Stanislaw Petrow 1983), dass auch scheinbar klare Angriffe Fehlalarme sein können.'
+    historicalContext: 'Dieses Szenario entspricht der größten Angst des Kalten Krieges: Ein bolt-from-the-blue Erstschlag ohne Vorwarnung. Trotz der Eindeutigkeit der Daten zeigt die Geschichte (Stanislaw Petrow 1983), dass auch scheinbar klare Angriffe Fehlalarme sein können.',
+    trajectories: realAttackTrajectories
   },
   {
     id: 'false-alarm',
