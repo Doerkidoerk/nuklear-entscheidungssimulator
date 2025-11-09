@@ -51,6 +51,7 @@ export type EventSource =
   | 'Pentagon'
   | 'Satellite Network'
   | 'Early Warning System'
+  | 'USCYBERCOM'
 
 // Berater
 export interface Advisor {
