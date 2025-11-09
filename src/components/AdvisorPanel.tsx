@@ -46,13 +46,13 @@ export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProp
         {advisors.map((advisor) => {
           const visibleStatements = advisor.statements
             .filter(s => s.timestamp <= elapsedTime)
-            .sort((a, b) => a.timestamp - b.timestamp)
+            .sort((a, b) => b.timestamp - a.timestamp)
 
           if (visibleStatements.length === 0) {
             return null
           }
 
-          const latestStatement = visibleStatements[visibleStatements.length - 1]
+          const latestStatement = visibleStatements[0]
 
           return (
             <div

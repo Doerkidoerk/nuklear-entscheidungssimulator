@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { SimulationState, Scenario } from '../types'
 import { getDecisionById } from '../data/decisions'
+import { getFollowUpEventsForDecision } from '../data/followUpEvents'
 
 export const useSimulation = (scenario: Scenario) => {
   const [state, setState] = useState<SimulationState>({
@@ -58,7 +59,7 @@ export const useSimulation = (scenario: Scenario) => {
       }
 
       // Folge-Events vorbereiten mit eindeutigen IDs
-      const followUpEvents = (decision.followUpEvents || []).map((event, index) => ({
+      const followUpEvents = getFollowUpEventsForDecision(scenario.id, decision.id).map((event, index) => ({
         ...event,
         id: `${event.id}-decision-${decision.id}-${index}-${Date.now()}`, // Eindeutige ID für Follow-up Events
         // Wenn relativ zur Entscheidung, füge die aktuelle Zeit hinzu
