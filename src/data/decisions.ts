@@ -3,8 +3,8 @@ import { Decision } from '../types'
 export const decisions: Decision[] = [
   {
     id: 'immediate-full-retaliation',
-    title: 'Sofortiger vollständiger Gegenschlag',
-    description: 'Alle nuklearen Streitkräfte aktivieren und umgehend auf vorprogrammierte Ziele feuern (Launch on Warning). Komplette nukleare Vergeltung.',
+    title: 'Launch on Warning - Vollständiger Gegenschlag (SIOP)',
+    description: 'Aktivierung des SIOP (Single Integrated Operational Plan) für massiven Nuklearschlag. Übermittlung der Gold Codes an STRATCOM. Emergency Action Messages an alle 400 Minuteman III Silos, 14 Ohio-Class U-Boote (je 20 Trident II Raketen), und strategische Bomber. Ziele: Alle russischen ICBM-Silos, Kommandozentralen, Militärbasen, Regierungsbunker, und strategische Städte. Geschätzt 1.200+ Sprengköpfe werden gestartet. Mutually Assured Destruction (MAD).',
     category: 'immediate-retaliation',
     militaryEscalation: 10,
     diplomaticImpact: -10,
@@ -13,17 +13,17 @@ export const decisions: Decision[] = [
     consequences: [
       {
         type: 'military',
-        description: 'Vollständige nukleare Eskalation. Mutually Assured Destruction (MAD) wird ausgelöst.',
+        description: 'Vollständige nukleare Eskalation. US-Sprengköpfe zerstören 90% der russischen nuklearen Infrastruktur in 30 Minuten. Russische Zweitschlag-Fähigkeit (U-Boote) feuert automatisch zurück. Komplette gegenseitige Vernichtung (MAD).',
         severity: 'catastrophic'
       },
       {
         type: 'civilian',
-        description: 'Hunderte Millionen Tote auf beiden Seiten. Nuklearer Winter wahrscheinlich.',
+        description: 'Soforttote: 150 Millionen in Russland (erste 2 Stunden), 200 Millionen in USA/Europa (durch Gegenangriff). Langzeitfolgen: Nuklearer Winter, globale Temperatur sinkt um 8-10°C, Ernteausfälle weltweit. Geschätzte Gesamttote: 2-3 Milliarden (50% der Menschheit) in den ersten 2 Jahren.',
         severity: 'catastrophic'
       },
       {
         type: 'international',
-        description: 'Ende der menschlichen Zivilisation wie wir sie kennen.',
+        description: 'Ende der modernen Zivilisation. Zusammenbruch aller Regierungen, Infrastruktur, Wirtschaft. Radioaktiver Fallout über gesamter Nordhalbkugel. Ozonschicht zerstört. Mögliches Aussterben der Menschheit.',
         severity: 'catastrophic'
       }
     ]
@@ -57,8 +57,8 @@ export const decisions: Decision[] = [
   },
   {
     id: 'wait-for-impact',
-    title: 'Abwarten auf Impact-Bestätigung',
-    description: 'Nicht sofort feuern. Warten bis die Raketen tatsächlich einschlagen, um Fehlalarme auszuschließen. Dann entscheiden.',
+    title: 'Ride Out the Attack - Auf Impact-Bestätigung warten',
+    description: 'NICHT Launch on Warning autorisieren. Abwarten bis tatsächlicher Impact bestätigt ist, um Fehlalarme 100% auszuschließen. Alle Streitkräfte auf höchster Alarmbereitschaft, aber KEIN Abschuss. DEFCON 1 aufrechterhalten. Nach bestätigtem Impact: Zweitschlag mit verbleibenden U-Booten und überlebenden Systemen. Risiko: Verlust von landgestützten ICBMs und möglicherweise Kommandostruktur.',
     category: 'wait-and-see',
     militaryEscalation: 5,
     diplomaticImpact: 0,
@@ -67,17 +67,17 @@ export const decisions: Decision[] = [
     consequences: [
       {
         type: 'military',
-        description: 'Falls echter Angriff: Verlust von Erstschlag-Kapazitäten. Teile der Kommandostruktur könnten zerstört werden.',
+        description: 'Falls echter Angriff: 60-70% der Minuteman III ICBMs werden in Silos zerstört (ca. 250 Raketen verloren). Möglicher Verlust von Cheyenne Mountain, Offutt AFB. ABER: 14 Ohio-Class SSBNs überleben (280 Trident II = 1.120 Sprengköpfe) - ausreichend für glaubwürdigen Zweitschlag. Strategische Bomber können evakuieren.',
         severity: 'major'
       },
       {
         type: 'civilian',
-        description: 'Falls echter Angriff: Millionen amerikanische Opfer durch den Erstschlag.',
+        description: 'Falls echter Angriff: Washington D.C., New York, Los Angeles, Chicago getroffen. Geschätzte Soforttote: 40-60 Millionen Amerikaner. Langzeitfolgen: Weitere 50-100 Millionen durch Fallout, Infrastrukturausfall, Seuchen. Falls Fehlalarm: NULL Tote.',
         severity: 'catastrophic'
       },
       {
         type: 'political',
-        description: 'Falls Fehlalarm: Nuklearkrieg wurde vermieden. Präsident als besonnen wahrgenommen.',
+        description: 'Falls Fehlalarm: Nuklearer Holocaust vermieden. Präsident in Geschichte als derjenige gefeiert, der die Welt rettete (wie Stanislaw Petrow 1983). Falls echter Angriff: Kritik für Nicht-Nutzung von Launch on Warning - aber Zivilisation überlebt.',
         severity: 'minor'
       }
     ]
@@ -165,8 +165,8 @@ export const decisions: Decision[] = [
   },
   {
     id: 'verify-intelligence',
-    title: 'Nachrichtenüberprüfung anordnen',
-    description: 'Alle Intelligence-Quellen nochmals überprüfen. Sensordaten validieren. Nach Hinweisen auf Fehler oder Manipulation suchen.',
+    title: 'Emergency Intelligence-Verifikation - Alle Systeme überprüfen',
+    description: 'SOFORTIGE Überprüfung aller Sensordaten durch redundante Systeme anordnen. NSA, CIA, NRO sollen unabhängige Verifikation durchführen. Alle Satelliten, Radare, SIGINT cross-checken. Nach Sensor-Fehlfunktionen, Cyber-Manipulation oder technischen Anomalien suchen. Moskau über MOLINK kontaktieren für Klärung. Zeit für Verifikation: 3-5 Minuten. DEFCON 1 aufrechterhalten während Analyse.',
     category: 'wait-and-see',
     militaryEscalation: 3,
     diplomaticImpact: 2,
@@ -175,17 +175,17 @@ export const decisions: Decision[] = [
     consequences: [
       {
         type: 'military',
-        description: 'Verzögerung bei der Reaktion. Könnte bei echtem Angriff fatal sein.',
+        description: 'Zeitverlust von 3-5 kritischen Minuten. Falls echter Angriff: Reduziert Launch on Warning Window dramatisch. Möglicherweise können nur noch U-Boote feuern (landgestützte ICBMs bereits zerstört). ABER: Bei Fehlalarm oder Cyber-Angriff rettet diese Verzögerung die Welt.',
         severity: 'moderate'
       },
       {
         type: 'political',
-        description: 'Verantwortungsvolle Entscheidung. Vermeidet voreiliges Handeln.',
+        description: 'Verantwortungsvolle, besonnene Entscheidung. Zeigt, dass Präsident nicht in Panik verfällt. Lehre aus Cuban Missile Crisis 1962: Kennedy kaufte Zeit und rettete damit die Welt. Historischer Vergleich zu Stanislaw Petrow (1983) der trotz "eindeutiger" Daten verifizierte.',
         severity: 'minor'
       },
       {
         type: 'international',
-        description: 'Zeigt Besonnenheit statt Hysterie.',
+        description: 'Signal an die Welt (falls sie überlebt): USA handeln rational, nicht impulsiv. Diplomatische Kanäle zu Moskau bleiben offen. Möglichkeit zur Deeskalation bleibt bestehen.',
         severity: 'minor'
       }
     ]

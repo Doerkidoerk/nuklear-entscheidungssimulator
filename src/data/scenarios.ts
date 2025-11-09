@@ -22,13 +22,23 @@ const icbmTargets = {
 // Echter Angriff Szenario
 const realAttackEvents: SimulationEvent[] = [
   {
+    id: 'evt-0',
+    timestamp: -5,
+    type: 'system-alert',
+    priority: 'high',
+    source: 'White House',
+    title: 'Situation Room - Sie werden erwartet',
+    content: 'Mr. President, Sie sind im Situation Room des Weißen Hauses. Der "Football" (Nuklearkoffer) ist bei Ihnen. Ihr militärischer Adjutant steht bereit. Die sichere Kommunikationslinie CRITICOM ist aktiv.',
+    updatesThreatLevel: 'low'
+  },
+  {
     id: 'evt-1',
     timestamp: 0,
     type: 'system-alert',
     priority: 'critical',
     source: 'NORAD',
     title: 'KRITISCHE WARNUNG: Raketenstarts erkannt',
-    content: 'DSP-Satelliten haben multiple Infrarot-Signaturen über russischem Territorium erfasst. Vorläufige Analyse: 40+ ICBM-Starts. Dies ist KEIN Drill.',
+    content: 'FLASH OVERRIDE - DSP-23 und SBIRS-GEO-1 Satelliten melden simultane Infrarot-Signaturen über Plesetsk Cosmodrome und Dombarovsky. KRITISCH: Mindestens 40+ Raketenmotoren detektiert. Klassifizierung: RS-28 Sarmat ICBMs. Dies ist KEIN Test, KEIN Drill. Authentifizierungscode: BRAVO-ZULU-SEVEN-NINER.',
     updatesThreatLevel: 'critical'
   },
   {
@@ -38,7 +48,7 @@ const realAttackEvents: SimulationEvent[] = [
     priority: 'critical',
     source: 'Early Warning System',
     title: 'Radar-Bestätigung',
-    content: 'Langstrecken-Radar in Thule (Grönland) und Clear (Alaska) bestätigen mehrere Objekte auf ballistischer Flugbahn. Geschätzte Flugzeit: 25-30 Minuten.',
+    content: 'PAVE PAWS Thule, Grönland: Bestätigung von 23 Objekten, Azimut 045, Höhe steigend durch 200km. PAVE PAWS Clear, Alaska: Bestätigung von 19 weiteren Objekten. Cobra Dane Shemya: Tracking aktiv. Geschätzte Flugzeit bis CONUS: 28 Minuten. Aktualisiere kontinuierlich Zielkoordinaten.',
   },
   {
     id: 'evt-3',
@@ -47,7 +57,7 @@ const realAttackEvents: SimulationEvent[] = [
     priority: 'high',
     source: 'NSA',
     title: 'SIGINT-Analyse',
-    content: 'Erhöhte militärische Kommunikation in russischen Befehlsstrukturen in den letzten 90 Minuten festgestellt. Codewörter deuten auf "Großoperation" hin.',
+    content: 'NSA Ft. Meade: SIGINT-Intercepts zeigen massive Zunahme verschlüsselter VHF-Kommunikation über KAZBEK-System (russisches nukleares C3I). Codewort "GRANIT" mehrfach bestätigt - GRU-Klassifizierung für strategische Nuklearoperation. Rückblickende Analyse zeigt Aktivitätszunahme begann vor 83 Minuten.',
   },
   {
     id: 'evt-4',
@@ -55,8 +65,8 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'satellite-data',
     priority: 'critical',
     source: 'Satellite Network',
-    title: 'Trajektorien-Update',
-    content: 'SPACETRACK hat 47 ballistische Objekte identifiziert. Geschätzte Ziele: Washington D.C., New York, Los Angeles, Chicago, Malmstrom AFB, Offutt AFB, NORAD. Zusätzliche Starts aus U-Booten im Nordatlantik möglich.',
+    title: 'Trajektorien-Update & Zielanalyse',
+    content: 'SPACETRACK Primärnetz: 47 ballistische Objekte mit hoher Konfidenz identifiziert. Berechnete Aufschlagpunkte: [KRITISCH] Washington D.C. (6 RVs), New York City (8 RVs), Los Angeles (4 RVs), Chicago (5 RVs), [MILITÄRISCH] Malmstrom AFB (8 RVs - Silo-Vernichtung), Offutt AFB/STRATCOM (6 RVs), Cheyenne Mountain/NORAD (4 RVs). NEUE STARTS detektiert: Barentssee - wahrscheinlich Borei-Class SSBN.',
     updatesThreatLevel: 'critical'
   },
   {
@@ -65,8 +75,8 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'diplomatic-message',
     priority: 'high',
     source: 'State Department',
-    title: 'Hot Line Moskau',
-    content: 'Keine Antwort über die Hot Line. Russische Botschaft in Washington wurde evakuiert (bestätigt durch CIA Assets vor Ort).',
+    title: 'Moscow-Washington Hotline - Keine Antwort',
+    content: 'MOLINK (Moscow Link) zeigt KEINE Antwort auf unsere Emergency-Anfragen. Direct Voice Link tot. Backup Fax-System keine Verbindung. KRITISCH: CIA Counterintelligence meldet russische Botschaft in Washington begann Evakuierung vor 35 Minuten. Personal vernichtet Dokumente. Botschaftsfahrzeuge verlassen Compound.',
   },
   {
     id: 'evt-6',
@@ -74,8 +84,17 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'intelligence-report',
     priority: 'high',
     source: 'CIA',
-    title: 'Vorwarnung verpasst?',
-    content: 'Rückblickende Analyse: Ungewöhnliche Bewegungen russischer strategischer Streitkräfte in den letzten 48h. Diese Muster wurden nicht als unmittelbare Bedrohung eingestuft. Möglicherweise haben wir die Vorbereitungen übersehen.',
+    title: 'Verpasste Vorwarnzeichen - Nachträgliche Analyse',
+    content: 'CIA National Clandestine Service: Rückblickende HUMINT/IMINT-Auswertung zeigt ungewöhnliche Bewegungen: 12. Strategic Missile Division (Kozelsk) erhöhte Aktivität vor 51 Stunden. Satelliten-Imagery zeigte Fuel-Transporte zu Silos vor 36 Stunden. FSB erhöhte Sicherheitszone um Sarow (Nuklearwaffenforschung) vor 29 Stunden. Analysten klassifizierten als "Routine-Übung". FEHLER in der Beurteilung wahrscheinlich.',
+  },
+  {
+    id: 'evt-6b',
+    timestamp: 135,
+    type: 'system-alert',
+    priority: 'critical',
+    source: 'White House',
+    title: 'Nuclear Football - Authentifizierung erforderlich',
+    content: 'Mr. President, der Football ist geöffnet. Sie sehen das "Black Book" mit SIOP (Single Integrated Operational Plan) Optionen. Ihr militärischer Adjutant hat die Gold Codes bereit. Für jeden Launch-Befehl benötigen Sie: (1) Ihre Authentifizierungskarte "Biscuit", (2) Auswahl eines SIOP-Plans, (3) Übermittlung der Gold Codes. Verteidigungsminister muss Befehl bestätigen (Two-Man Rule).',
   },
   {
     id: 'evt-7',
@@ -83,8 +102,8 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'military-status',
     priority: 'critical',
     source: 'STRATCOM',
-    title: 'Zweitschlagfähigkeit gefährdet',
-    content: 'Wenn feindliche Raketen ihre Ziele erreichen, werden geschätzte 60% unserer landgestützten ICBMs zerstört. Empfehle dringend Launch on Warning.',
+    title: 'Zweitschlagfähigkeit in Gefahr - Launch on Warning empfohlen',
+    content: 'STRATCOM Offutt: Bedrohungsanalyse abgeschlossen. Bei Impact der identifizierten RVs auf unsere Silos: Geschätzte 62% unserer 400 Minuteman III werden zerstört. 50% der Kommando-und-Kontroll-Infrastruktur gefährdet. U-Boot-Flotte unversehrt, aber Kommunikation könnte gekappt werden. DRINGENDE EMPFEHLUNG: Launch on Warning (LoW) um Zweitschlagfähigkeit zu sichern. Zeitfenster: 6 Minuten verbleiben.',
   },
   {
     id: 'evt-8',
@@ -92,8 +111,17 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'system-alert',
     priority: 'critical',
     source: 'NORAD',
-    title: 'Weitere Starts detektiert',
-    content: 'Zusätzliche SLBM-Starts von U-Booten in der Barentssee identifiziert. Gesamtzahl feindlicher Raketen: 68. Dies entspricht einem vollständigen Erstschlag.',
+    title: 'SLBM-Starts detektiert - Zweite Welle',
+    content: 'FLASH TRAFFIC - SBIRS detektiert zusätzliche 21 Raketenstarts aus Barentssee, Position 71°N 35°E. Klassifizierung: RSM-56 Bulava SLBMs von Borei-Class SSBN. Kürzere Flugzeit: 12-15 Minuten. Neue Gesamtzahl feindlicher Raketen: 68 bestätigt. BEURTEILUNG: Dies ist ein koordinierter vollumfänglicher Erstschlag (Full First Strike) zur Entwaffnung der USA.',
+  },
+  {
+    id: 'evt-8b',
+    timestamp: 270,
+    type: 'system-alert',
+    priority: 'high',
+    source: 'White House',
+    title: 'Continuity of Government initiiert',
+    content: 'Vice President wurde nach Raven Rock (Site R) evakuiert. Speaker of the House nach Mount Weather. E-4B "Nightwatch" (National Airborne Operations Center) ist airborne über Nebraska. Sie haben weiterhin Oberbefehl, Mr. President. Alle Kommunikationslinks funktional.',
   },
   {
     id: 'evt-9',
@@ -101,8 +129,8 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'intelligence-report',
     priority: 'medium',
     source: 'CIA',
-    title: 'Keine diplomatische Lösung',
-    content: 'Alle Versuche, russische Führung zu erreichen, gescheitert. Regierungs-Bunker in Ural-Region zeigen erhöhte Aktivität. Sie haben sich auf Vergeltung vorbereitet.',
+    title: 'Russische Führung unerreichbar',
+    content: 'CIA Moscow Station (via SATCOM): Alle Kontaktversuche zu russischer Regierung gescheitert. Kreml-Evakuierung vor ca. 2 Stunden (vor unserer ersten Detektion!). HUMINT bestätigt: Putin-Konvoi gesehen Richtung Sharapovo (unterirdischer Bunker südlich Moskau). Yasenevo (SVR Hauptquartier) evakuiert. Mount Yamantau (Ural-Bunker) zeigt maximale Aktivität. Sie waren vorbereitet.',
   },
   {
     id: 'evt-10',
@@ -110,8 +138,8 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'system-alert',
     priority: 'critical',
     source: 'NORAD',
-    title: '4 Minuten bis Impact',
-    content: 'Erste Raketen werden in 240 Sekunden amerikanisches Territorium erreichen. Prioritätsziele: NORAD, Offutt AFB.',
+    title: '4 Minuten bis Impact - Terminal Phase beginnt',
+    content: 'NORAD Cheyenne Mountain: RVs beginnen Wiedereintritt. Erste Impacts in T-minus 4 Minuten. Prioritätsziele First Wave: Cheyenne Mountain/NORAD (T-3:47), Offutt AFB/STRATCOM (T-3:52), Malmstrom AFB Missile Fields (T-4:15). Raketenabwehr GMD (Ground-based Midcourse Defense) aktiviert, aber gegen diese Anzahl Ziele hoffnungslos überfordert (max. 44 Interceptors verfügbar).',
   },
   {
     id: 'evt-11',
@@ -119,17 +147,26 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'system-alert',
     priority: 'critical',
     source: 'NORAD',
-    title: '3 Minuten bis Impact',
-    content: 'Raketen in Terminal-Phase. Evakuierung der wichtigsten Ziele ist nicht mehr möglich. Mr. President, wir brauchen Ihre Entscheidung JETZT.',
+    title: '3 Minuten bis Impact - Entscheidung erforderlich',
+    content: 'RVs in finaler Terminal-Phase. Geschwindigkeit: Mach 20+. Evakuierung aller Ziele unmöglich. Mr. President - wenn Sie Launch on Warning autorisieren, muss dies JETZT geschehen. Nach Impact der ersten Welle könnte unsere C3I (Command, Control, Communications, Intelligence) Infrastruktur zerstört sein. Sie haben noch ca. 120 Sekunden für Launch-Authorization.',
+  },
+  {
+    id: 'evt-11b',
+    timestamp: 450,
+    type: 'system-alert',
+    priority: 'critical',
+    source: 'White House',
+    title: 'Persönliche Nachricht - Ihre Familie',
+    content: 'Mr. President, Ihre Familie wurde vor 8 Minuten im Marine One evakuiert. Secret Service meldet: auf dem Weg zu sicherem Standort. First Lady fragt nach Ihnen. Sie können sie nicht erreichen - alle zivilen Leitungen wurden für militärischen Traffic gesperrt. Sie sind jetzt allein mit dieser Entscheidung.',
   },
   {
     id: 'evt-12',
     timestamp: 480,
     type: 'system-alert',
     priority: 'critical',
-    source: 'NORAD',
-    title: '2 Minuten bis Impact',
-    content: 'Letzte Gelegenheit für Launch on Warning. Nach Impact könnten Kommunikationssysteme zerstört sein.',
+    source: 'STRATCOM',
+    title: '2 Minuten bis Impact - Letzte Launch-Gelegenheit',
+    content: 'STRATCOM: Dies ist Ihre letzte realistische Gelegenheit für Launch on Warning. Nach Impact könnten ELF (Extremely Low Frequency) Kommunikation zu U-Booten, Landlines zu Silos und SATCOM gestört sein. Alle 400 Minuteman III sind HOT (auf Abschuss vorbereitet). 14 Ohio-Class SSBNs warten auf EAM (Emergency Action Message). Trigger nur durch Ihre Gold Codes. Zeit läuft ab, Sir.',
   },
   {
     id: 'evt-13',
@@ -137,8 +174,17 @@ const realAttackEvents: SimulationEvent[] = [
     type: 'system-alert',
     priority: 'critical',
     source: 'NORAD',
-    title: '1 Minute bis Impact',
-    content: 'Impact unmittelbar bevorstehend. Gott stehe uns bei.',
+    title: '1 Minute bis Impact - Gott stehe uns bei',
+    content: 'Impact in 60 Sekunden. Erste RVs werden Cheyenne Mountain treffen. Washington D.C. T-minus 68 Sekunden. Wir haben alles getan, was wir konnten, Mr. President. Die Geschichte wird Sie nach dieser Entscheidung beurteilen. Was immer Sie entscheiden - möge Gott uns allen beistehen.',
+  },
+  {
+    id: 'evt-14',
+    timestamp: 570,
+    type: 'system-alert',
+    priority: 'critical',
+    source: 'NORAD',
+    title: '30 Sekunden - Letzte Momente',
+    content: 'T-minus 30 Sekunden bis Impact. Wenn es ein Fehlalarm ist... werden wir es in 30 Sekunden wissen. Wenn nicht... Mr. President, es war eine Ehre, Ihnen zu dienen.',
   }
 ]
 
@@ -152,26 +198,36 @@ export const realAttackTrajectories: ICBMTrajectory[] = [
   { id: 't7', origin: icbmTargets.barents, target: icbmTargets.norad, launchTime: 240, impactTime: 1500, status: 'mid-flight', type: 'SLBM', warheadYield: '100 kt' },
 ]
 
-// False Alarm Szenario
+// False Alarm Szenario (basierend auf historischen Vorfällen)
 const falseAlarmEvents: SimulationEvent[] = [
+  {
+    id: 'fa-0',
+    timestamp: -5,
+    type: 'system-alert',
+    priority: 'medium',
+    source: 'White House',
+    title: 'Situation Room - Routine-Briefing',
+    content: 'Mr. President, Sie sind im Situation Room für Ihr tägliches Intelligence-Briefing. Der Football ist wie immer in Reichweite. Es ist 03:47 Uhr Eastern Time. Keine aktuellen Bedrohungen. THREATCON Alpha (Friedenszeit).',
+    updatesThreatLevel: 'low'
+  },
   {
     id: 'fa-1',
     timestamp: 0,
     type: 'system-alert',
     priority: 'critical',
     source: 'NORAD',
-    title: 'WARNUNG: Mögliche Raketenstarts',
-    content: 'DSP-Satellit 23 meldet Infrarot-Signaturen über Sibirien. Anzahl unklar. Verifizierung läuft.',
+    title: 'WARNUNG: Satelliten-Anomalie - Mögliche Starts',
+    content: 'DSP-23 (Defense Support Program Satellit über Sibirien) meldet 5... korrektur 8... jetzt 12 Infrarot-Signaturen. Position ungefähr Plesetsk Region. ACHTUNG: Signalstärke ungewöhnlich schwach. Sekundärsensor DSP-21 zeigt KEINE Korrelation. Verifizierung durch Radar angefordert. Confidence Level: MEDIUM.',
     updatesThreatLevel: 'high'
   },
   {
     id: 'fa-2',
     timestamp: 30,
-    type: 'system-alert',
+    type: 'radar-detection',
     priority: 'high',
     source: 'Early Warning System',
-    title: 'Radarbestätigung ausstehend',
-    content: 'Langstreckenradar hat Schwierigkeiten, die gemeldeten Objekte zu erfassen. Atmosphärische Störungen möglich.',
+    title: 'Radar-Korrelation fehlgeschlagen',
+    content: 'PAVE PAWS Thule: Keine Radarkontakte in angegebener Region. PAVE PAWS Beale: Negativ. Cobra Dane: Scanning... KEINE ballistischen Objekte detektiert. KRITISCH: Wenn DSP-23 korrekt ist, müssten wir Radarkontakte haben. Atmosphärische Bedingungen: Normal. Ionosphäre: Ruhig. Techniker überprüfen Radar-Funktionalität.',
   },
   {
     id: 'fa-3',
@@ -179,8 +235,8 @@ const falseAlarmEvents: SimulationEvent[] = [
     type: 'intelligence-report',
     priority: 'medium',
     source: 'CIA',
-    title: 'Keine ungewöhnlichen Aktivitäten',
-    content: 'Unsere Assets in Russland melden keine erhöhte militärische Alarmbereitschaft. Business as usual in Moskau.',
+    title: 'Keine russischen Vorbereitungen erkennbar',
+    content: 'CIA Assets in Russland (HUMINT): Keine ungewöhnlichen Aktivitäten. Moskau normale Nachtaktivität. Kreml unbeleuchtet (normal für 04:47 Ortszeit). Militärische Kommunikation auf Baseline-Niveau. FSB Headquarters Lubyanka: Routine. GRU: Keine Alerts. Wichtig: Bei einem echten Launch würden wir erhöhte Aktivität 30-60 Min. VOR Start sehen.',
   },
   {
     id: 'fa-4',
@@ -188,8 +244,8 @@ const falseAlarmEvents: SimulationEvent[] = [
     type: 'diplomatic-message',
     priority: 'high',
     source: 'State Department',
-    title: 'Moskau verwirrt',
-    content: 'Russischer Außenminister auf Hot Line: "Wir haben keine Raketen gestartet. Was geht da vor sich?" Klingt authentisch überrascht.',
+    title: 'Moscow Hotline - Verwirrung und Dementis',
+    content: 'MOLINK Direct Voice aktiviert. Russischer Verteidigungsminister Shoigu (aus dem Schlaf geweckt, hörbar verwirrt): "Was? Nein! Wir haben NICHTS gestartet. Unsere Systeme zeigen keine Starts. Prüfen Sie Ihre Sensoren! Ist das eine Provokation?" Voice Stress Analysis: Zeigt echte Überraschung, keine Täuschung erkennbar. Er scheint wirklich nichts zu wissen.',
   },
   {
     id: 'fa-5',
@@ -197,8 +253,8 @@ const falseAlarmEvents: SimulationEvent[] = [
     type: 'satellite-data',
     priority: 'medium',
     source: 'Satellite Network',
-    title: 'Datenfehler möglich',
-    content: 'Techniker melden: DSP-Satellit 23 hatte in den letzten 72h mehrere kleinere Fehlfunktionen. Sensor-Kalibrierung könnte fehlerhaft sein.',
+    title: 'DSP-23 Systemstatus - Anomalien entdeckt',
+    content: 'Air Force Satellite Control Network: Telemetrie-Review von DSP-23 zeigt Auffälligkeiten. Sensor hatte in letzten 72 Stunden 3 kurze Ausfälle (je 2-4 Sekunden). Gyroscope-Drift von 0.3 Grad detektiert vor 6 Stunden. Automatic Recalibration lief vor 47 Minuten. MÖGLICHKEIT: Kalibrierungsfehler führt zu False Positives. Satellit ist 19 Jahre alt (designed für 12 Jahre).',
   },
   {
     id: 'fa-6',
@@ -206,8 +262,8 @@ const falseAlarmEvents: SimulationEvent[] = [
     type: 'radar-detection',
     priority: 'medium',
     source: 'Early Warning System',
-    title: 'Keine Radar-Bestätigung',
-    content: 'Keines unserer Radarsysteme kann die gemeldeten Objekte erfassen. Entweder sind sie nicht da, oder unsere Radare versagen komplett - was höchst unwahrscheinlich ist.',
+    title: 'Radar-Bestätigung: NEGATIV',
+    content: 'Nach 3 Minuten intensivem Scanning: KEINE Radarsysteme können die gemeldeten Objekte erfassen. Thule: Negativ. Clear: Negativ. Beale: Negativ. Fylingdales (UK): Negativ. Cobra Dane: Negativ. SCHLUSSFOLGERUNG: Entweder (A) Objekte existieren nicht, oder (B) ALLE unsere Radare versagen simultan - statistische Wahrscheinlichkeit nahe Null. Wahrscheinlicher: DSP-Fehler.',
   },
   {
     id: 'fa-7',
@@ -215,8 +271,8 @@ const falseAlarmEvents: SimulationEvent[] = [
     type: 'intelligence-report',
     priority: 'high',
     source: 'NSA',
-    title: 'Keine feindlichen Kommunikationen',
-    content: 'SIGINT zeigt keine erhöhte militärische Kommunikation in Russland. Bei einem echten Start würden wir massive Funkaktivität sehen.',
+    title: 'SIGINT: Keine feindliche Kommunikation',
+    content: 'NSA SIGINT-Analyse (letzte 4 Minuten): Russische militärische HF/VHF-Kommunikation auf normalem Nachtbetrieb-Niveau. KEIN Anstieg. Keine Verschlüsselungs-Spikes. Kein Codewort-Traffic. WICHTIG: Bei echtem ICBM-Launch würden wir massive Zunahme von verschlüsselter Kommunikation sehen (Faktor 10-20x). Wir sehen: 1.0x Normal. Das passt NICHT zu einem Angriff.',
   },
   {
     id: 'fa-8',
@@ -224,8 +280,8 @@ const falseAlarmEvents: SimulationEvent[] = [
     type: 'system-alert',
     priority: 'high',
     source: 'NORAD',
-    title: 'System-Diagnose',
-    content: 'Technische Teams führen Notfall-Diagnose durch. Vorläufige Ergebnisse: Softwarefehler in Satelliten-Telemetrie wahrscheinlich.',
+    title: 'Technische Analyse - Wahrscheinlicher Systemfehler',
+    content: 'NORAD Technical Analysis Team: Emergency Diagnostic läuft. DSP-23 wurde remote interrogated. Sensor zeigt jetzt 0 Kontakte (vorher 12). Die "Starts" sind verschwunden - physikalisch unmöglich bei echten ICBMs. VORLÄUFIGE DIAGNOSE: DSP-23 Infrarot-Sensor fehlinterpretierte Sonnenlicht-Reflexion auf hochaltitude Wolkenformation als Raketenmotoren. Verstärkt durch bekannten Gyroscope-Drift.',
   },
   {
     id: 'fa-9',
@@ -233,8 +289,8 @@ const falseAlarmEvents: SimulationEvent[] = [
     type: 'satellite-data',
     priority: 'critical',
     source: 'Satellite Network',
-    title: 'FEHLALARM BESTÄTIGT',
-    content: 'Softwarefehler in DSP-Satellit 23 identifiziert und bestätigt. Sonnenlicht-Reflektion auf Wolkenformationen wurde als Raketenstarts fehlinterpretiert. DIES IST EIN FEHLALARM.',
+    title: 'FEHLALARM OFFIZIELL BESTÄTIGT',
+    content: 'Air Force Space Command - OFFIZIELLE BESTÄTIGUNG: DSP-23 Sensor-Fehlfunktion identifiziert. Ursache: Kombination aus (1) Gyroscope-Drift nach Recalibration, (2) Sensor-Degradation (Satellit 7 Jahre über Lebensdauer), (3) Sonnenreflektion auf Noctilucent Clouds über Sibirien um 03:47 UTC. DIES IST EIN FEHLALARM. Kein tatsächlicher Angriff. Satellit wird deaktiviert.',
     updatesThreatLevel: 'low'
   },
   {
@@ -242,9 +298,18 @@ const falseAlarmEvents: SimulationEvent[] = [
     timestamp: 380,
     type: 'system-alert',
     priority: 'medium',
-    source: 'NORAD',
-    title: 'Entwarnung',
-    content: 'Bestätigung: Kein tatsächlicher Angriff. Satellit wird vom Netz genommen. Untersuchung eingeleitet.',
+    source: 'White House',
+    title: 'Entwarnung - Lessons Learned',
+    content: 'Mr. President, Entwarnung bestätigt. DEFCON zurück auf 4. DSP-23 wird außer Betrieb genommen. Dies erinnert an: (1) 26. Sept. 1983 - Stanislaw Petrow rettete die Welt bei ähnlichem False Alarm, (2) 9. Nov. 1979 - NORAD Computer-Fehler. Sie haben richtig entschieden. Bericht für Kongress wird vorbereitet.',
+  },
+  {
+    id: 'fa-11',
+    timestamp: 420,
+    type: 'intelligence-report',
+    priority: 'medium',
+    source: 'CIA',
+    title: 'Moskau beruhigt - Krise beendet',
+    content: 'CIA Moscow Station: Russische Führung akzeptiert unsere Erklärung. Außenminister Lavrov auf MOLINK: "Wir verstehen. Unsere Systeme sind auch nicht perfekt. Gut, dass Sie besonnen reagiert haben." Keine diplomatischen Spannungen. Vorfall wird als technisches Problem behandelt.',
   }
 ]
 
