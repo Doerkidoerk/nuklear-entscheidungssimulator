@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { SimulationState, Scenario } from '../types'
+import { getDecisionById } from '../data/decisions'
 
 export const useSimulation = (scenario: Scenario) => {
   const [state, setState] = useState<SimulationState>({
@@ -13,6 +14,11 @@ export const useSimulation = (scenario: Scenario) => {
     trajectories: [],
     selectedDecision: undefined,
     decisionMadeAt: undefined,
+    decisionHistory: [],
+    currentPhase: 0,
+    availableDecisions: scenario.decisions.map(d => d.id),
+    gameEnded: false,
+    pendingFollowUpEvents: [],
   })
 
   const intervalRef = useRef<number | null>(null)
@@ -39,17 +45,64 @@ export const useSimulation = (scenario: Scenario) => {
 
   // Make decision
   const makeDecision = useCallback((decisionId: string) => {
-    setState(prev => ({
-      ...prev,
-      selectedDecision: decisionId,
-      decisionMadeAt: prev.elapsedTime,
-      isRunning: false,
-    }))
+    setState(prev => {
+      const decision = getDecisionById(decisionId)
+      if (!decision) return prev
+
+      // Entscheidung zur Historie hinzufügen
+      const historyEntry = {
+        decisionId: decision.id,
+        decisionTitle: decision.title,
+        timestamp: prev.elapsedTime,
+        phase: prev.currentPhase,
+      }
+
+      // Folge-Events vorbereiten
+      const followUpEvents = (decision.followUpEvents || []).map(event => ({
+        ...event,
+        // Wenn relativ zur Entscheidung, füge die aktuelle Zeit hinzu
+        timestamp: event.relativeToDecision
+          ? prev.elapsedTime + event.triggerDelay
+          : event.timestamp,
+      }))
+
+      // Neue verfügbare Entscheidungen basierend auf der Folge-Entscheidungen
+      const newAvailableDecisions = decision.followUpDecisions || []
+
+      // Prüfe, ob das Spiel endet
+      const shouldEndGame = decision.endsGame || false
+      const endsImmediately = decision.gameEndingType === 'immediate'
+
+      return {
+        ...prev,
+        selectedDecision: decisionId,
+        decisionMadeAt: prev.elapsedTime,
+        decisionHistory: [...prev.decisionHistory, historyEntry],
+        currentPhase: prev.currentPhase + 1,
+        availableDecisions: newAvailableDecisions,
+        pendingFollowUpEvents: [...prev.pendingFollowUpEvents, ...followUpEvents],
+        gameEnded: shouldEndGame && endsImmediately,
+        isRunning: !(shouldEndGame && endsImmediately), // Spiel läuft weiter, außer bei sofortigem Ende
+      }
+    })
+
+    // Kurze Verzögerung, dann selectedDecision zurücksetzen (außer bei Spielende)
+    setTimeout(() => {
+      setState(prev => {
+        // Wenn das Spiel sofort endet, nicht zurücksetzen
+        if (prev.gameEnded) return prev
+
+        return {
+          ...prev,
+          selectedDecision: undefined,
+        }
+      })
+    }, 2000) // 2 Sekunden Verzögerung, um die Entscheidung anzuzeigen
   }, [])
 
   // Main simulation loop
   useEffect(() => {
-    if (!state.isRunning || state.isPaused) {
+    if (!state.isRunning || state.isPaused || state.gameEnded) {
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
         intervalRef.current = null
@@ -62,9 +115,22 @@ export const useSimulation = (scenario: Scenario) => {
       const elapsed = Math.floor((now - startTimeRef.current) / 1000)
       const remaining = Math.max(0, scenario.duration - elapsed)
 
-      // Check for new events
-      const newEvents = scenario.events.filter(
+      // Check for new scenario events
+      const newScenarioEvents = scenario.events.filter(
         event => event.timestamp <= elapsed && !state.receivedEvents.find(e => e.id === event.id)
+      )
+
+      // Check for pending follow-up events that should trigger now
+      const triggeredFollowUpEvents = state.pendingFollowUpEvents.filter(
+        event => event.timestamp <= elapsed && !state.receivedEvents.find(e => e.id === event.id)
+      )
+
+      // Combine all new events
+      const newEvents = [...newScenarioEvents, ...triggeredFollowUpEvents]
+
+      // Remove triggered events from pending
+      const remainingPendingEvents = state.pendingFollowUpEvents.filter(
+        event => !triggeredFollowUpEvents.find(e => e.id === event.id)
       )
 
       // Update threat level based on events
@@ -75,17 +141,22 @@ export const useSimulation = (scenario: Scenario) => {
         }
       })
 
+      // Check if game should end (delayed ending)
+      const shouldEndNow = state.gameEnded || (remaining === 0 && state.availableDecisions.length === 0)
+
       setState(prev => ({
         ...prev,
         elapsedTime: elapsed,
         remainingTime: remaining,
         receivedEvents: [...prev.receivedEvents, ...newEvents].sort((a, b) => b.timestamp - a.timestamp),
         currentThreatLevel: newThreatLevel,
-        isRunning: remaining > 0,
+        pendingFollowUpEvents: remainingPendingEvents,
+        isRunning: !shouldEndNow && remaining > 0,
+        gameEnded: shouldEndNow,
       }))
 
-      // Stop when time runs out
-      if (remaining === 0) {
+      // Stop when game ends
+      if (shouldEndNow) {
         if (intervalRef.current) {
           clearInterval(intervalRef.current)
           intervalRef.current = null
@@ -99,7 +170,7 @@ export const useSimulation = (scenario: Scenario) => {
         intervalRef.current = null
       }
     }
-  }, [state.isRunning, state.isPaused, state.currentThreatLevel, state.receivedEvents, scenario])
+  }, [state.isRunning, state.isPaused, state.gameEnded, state.currentThreatLevel, state.receivedEvents, state.pendingFollowUpEvents, state.availableDecisions, scenario])
 
   return {
     state,

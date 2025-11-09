@@ -90,6 +90,10 @@ export interface Decision {
   militaryEscalation: number // 0-10 Skala
   diplomaticImpact: number // -10 bis +10
   civilianCasualties: 'none' | 'low' | 'medium' | 'high' | 'catastrophic'
+  followUpEvents?: FollowUpEvent[] // Ereignisse, die durch diese Entscheidung ausgelöst werden
+  followUpDecisions?: string[] // IDs der Folge-Entscheidungen
+  endsGame?: boolean // Beendet diese Entscheidung das Spiel?
+  gameEndingType?: 'immediate' | 'delayed' // Sofortiges Ende oder nach Folge-Events?
 }
 
 export type DecisionCategory =
@@ -133,6 +137,20 @@ export interface Target {
   threatLevel: ThreatLevel
 }
 
+// Follow-Up Events (werden durch Entscheidungen ausgelöst)
+export interface FollowUpEvent extends SimulationEvent {
+  triggerDelay: number // Sekunden nach der Entscheidung
+  relativeToDecision: boolean // true = relativ zur Entscheidungszeit, false = absolut
+}
+
+// Entscheidungshistorie
+export interface DecisionHistoryEntry {
+  decisionId: string
+  decisionTitle: string
+  timestamp: number
+  phase: number
+}
+
 // Simulation State
 export interface SimulationState {
   scenarioId: ScenarioType
@@ -145,6 +163,11 @@ export interface SimulationState {
   trajectories: ICBMTrajectory[]
   selectedDecision?: string
   decisionMadeAt?: number
+  decisionHistory: DecisionHistoryEntry[] // Historie aller getroffenen Entscheidungen
+  currentPhase: number // Aktuelle Entscheidungsphase (0 = initial, 1 = nach erster Entscheidung, etc.)
+  availableDecisions: string[] // IDs der aktuell verfügbaren Entscheidungen
+  gameEnded: boolean // Ist das Spiel beendet?
+  pendingFollowUpEvents: FollowUpEvent[] // Wartende Folge-Events
 }
 
 // Debriefing nach der Simulation

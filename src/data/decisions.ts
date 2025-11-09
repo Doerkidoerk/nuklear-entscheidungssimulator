@@ -1,6 +1,9 @@
 import { Decision } from '../types'
+import { followUpEventsByDecision } from './followUpEvents'
+import { allFollowUpDecisions } from './followUpDecisions'
 
-export const decisions: Decision[] = [
+// Haupt-Entscheidungen (Initial verfügbar)
+export const initialDecisions: Decision[] = [
   {
     id: 'immediate-full-retaliation',
     title: 'Launch on Warning - Vollständiger Gegenschlag (SIOP)',
@@ -10,6 +13,9 @@ export const decisions: Decision[] = [
     diplomaticImpact: -10,
     civilianCasualties: 'catastrophic',
     requiresConfirmation: true,
+    endsGame: true,
+    gameEndingType: 'delayed',
+    followUpEvents: followUpEventsByDecision['immediate-full-retaliation'],
     consequences: [
       {
         type: 'military',
@@ -64,6 +70,8 @@ export const decisions: Decision[] = [
     diplomaticImpact: 0,
     civilianCasualties: 'high',
     requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['wait-for-impact'],
+    followUpDecisions: ['final-wait-impact', 'final-limited-strike', 'final-massive-retaliation'],
     consequences: [
       {
         type: 'military',
@@ -118,6 +126,8 @@ export const decisions: Decision[] = [
     diplomaticImpact: 8,
     civilianCasualties: 'none',
     requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['emergency-communication'],
+    followUpDecisions: ['after-comm-success', 'after-comm-no-response', 'after-comm-ambiguous'],
     consequences: [
       {
         type: 'diplomatic',
@@ -145,6 +155,8 @@ export const decisions: Decision[] = [
     diplomaticImpact: -3,
     civilianCasualties: 'low',
     requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['alert-defcon1'],
+    followUpDecisions: ['after-defcon1-launch', 'after-defcon1-wait', 'after-defcon1-communicate'],
     consequences: [
       {
         type: 'military',
@@ -172,6 +184,8 @@ export const decisions: Decision[] = [
     diplomaticImpact: 2,
     civilianCasualties: 'none',
     requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['verify-intelligence'],
+    followUpDecisions: ['after-verify-confirmed-false', 'after-verify-still-unclear', 'after-verify-attack-confirmed'],
     consequences: [
       {
         type: 'military',
@@ -218,3 +232,11 @@ export const decisions: Decision[] = [
     ]
   }
 ]
+
+// Alle Entscheidungen kombiniert (Initial + Follow-Ups)
+export const decisions: Decision[] = [...initialDecisions, ...allFollowUpDecisions]
+
+// Helper-Funktion um eine Entscheidung nach ID zu finden
+export const getDecisionById = (id: string): Decision | undefined => {
+  return decisions.find(d => d.id === id)
+}

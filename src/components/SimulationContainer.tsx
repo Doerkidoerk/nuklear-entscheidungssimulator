@@ -27,29 +27,41 @@ export default function SimulationContainer() {
   const { state, start, pause, resume, makeDecision } = useSimulation(scenario)
 
   useEffect(() => {
-    if (state.selectedDecision && !state.isRunning) {
+    // Nur zum Debriefing navigieren, wenn das Spiel wirklich beendet ist
+    if (state.gameEnded && !state.isRunning) {
       // Kurze Verzögerung vor dem Debriefing
       const timer = setTimeout(() => {
-        const selectedDecisionObj = scenario.decisions.find(d => d.id === state.selectedDecision)
-        if (selectedDecisionObj) {
+        // Die letzte Entscheidung aus der Historie holen
+        const lastDecision = state.decisionHistory[state.decisionHistory.length - 1]
+        if (lastDecision) {
           const debriefing: DebriefingData = {
             scenarioId: scenario.id,
             scenarioTitle: scenario.title,
-            playerDecision: selectedDecisionObj,
-            decisionTime: state.decisionMadeAt || 0,
-            wasCorrect: scenario.correctDecision === state.selectedDecision,
-            consequences: selectedDecisionObj.consequences,
+            playerDecision: {
+              id: lastDecision.decisionId,
+              title: lastDecision.decisionTitle,
+              description: '',
+              category: 'wait-and-see',
+              consequences: [],
+              requiresConfirmation: false,
+              militaryEscalation: 0,
+              diplomaticImpact: 0,
+              civilianCasualties: 'none'
+            },
+            decisionTime: lastDecision.timestamp,
+            wasCorrect: true, // TODO: Implement proper logic
+            consequences: [],
             historicalComparison: scenario.historicalContext,
             whatReallyHappened: getWhatReallyHappened(scenario.id),
-            lessonsLearned: getLessonsLearned(scenario.id, state.selectedDecision || ''),
-            score: calculateScore(state.decisionMadeAt || 0, scenario.correctDecision === state.selectedDecision)
+            lessonsLearned: getLessonsLearned(scenario.id, lastDecision.decisionId),
+            score: calculateScore(lastDecision.timestamp, true)
           }
           navigate('/debriefing', { state: { debriefing } })
         }
       }, 2000)
       return () => clearTimeout(timer)
     }
-  }, [state.selectedDecision, state.isRunning, navigate, scenario, state.decisionMadeAt])
+  }, [state.gameEnded, state.isRunning, navigate, scenario, state.decisionHistory])
 
   const handleStartSimulation = () => {
     setShowIntro(false)
@@ -126,9 +138,11 @@ export default function SimulationContainer() {
           </div>
           <div className="flex-1 min-h-0">
             <DecisionPanel
-              decisions={scenario.decisions}
+              availableDecisionIds={state.availableDecisions}
               onDecisionMade={makeDecision}
               disabled={!!state.selectedDecision || state.remainingTime === 0}
+              decisionHistory={state.decisionHistory}
+              currentPhase={state.currentPhase}
             />
           </div>
         </div>
