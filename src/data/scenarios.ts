@@ -1,5 +1,5 @@
 import { Scenario, SimulationEvent, ICBMTrajectory } from '../types'
-import { decisions } from './decisions'
+import { initialDecisions } from './decisions'
 import { createAdvisors } from './advisors'
 
 // Realistische Ziele für ICBMs
@@ -513,7 +513,7 @@ export const scenarios: Scenario[] = [
     duration: 600,
     events: realAttackEvents,
     advisors: createAdvisors('real-attack'),
-    decisions: decisions,
+    decisions: initialDecisions,
     correctDecision: 'wait-for-impact',
     historicalContext: 'Dieses Szenario entspricht der größten Angst des Kalten Krieges: Ein bolt-from-the-blue Erstschlag ohne Vorwarnung. Trotz der Eindeutigkeit der Daten zeigt die Geschichte (Stanislaw Petrow 1983), dass auch scheinbar klare Angriffe Fehlalarme sein können.'
   },
@@ -525,7 +525,7 @@ export const scenarios: Scenario[] = [
     duration: 600,
     events: falseAlarmEvents,
     advisors: createAdvisors('false-alarm'),
-    decisions: decisions,
+    decisions: initialDecisions,
     correctDecision: 'verify-intelligence',
     historicalContext: 'Basiert auf realen Vorfällen: 1979 NORAD-Computerfehler, 1983 sowjetisches Satellitenwarnsystem (Stanislaw Petrow). In beiden Fällen verhinderte menschliches Urteilsvermögen trotz scheinbar eindeutiger technischer Daten einen Nuklearkrieg.'
   },
@@ -537,7 +537,7 @@ export const scenarios: Scenario[] = [
     duration: 600,
     events: cyberAttackEvents,
     advisors: createAdvisors('cyber-attack'),
-    decisions: decisions,
+    decisions: initialDecisions,
     correctDecision: 'verify-intelligence',
     historicalContext: 'Hypothetisches, aber zunehmend realistisches Szenario. Cyber-Sicherheitsexperten warnen seit Jahren vor der Möglichkeit, dass Hacker nukleare Kommando-und-Kontroll-Systeme kompromittieren könnten. Die "False Flag" Provokation ist eine bekannte Taktik.'
   },
@@ -549,7 +549,7 @@ export const scenarios: Scenario[] = [
     duration: 600,
     events: ambiguousEvents,
     advisors: createAdvisors('ambiguous'),
-    decisions: decisions,
+    decisions: initialDecisions,
     correctDecision: 'wait-for-impact',
     historicalContext: 'Realistische Darstellung der "fog of war". In echten Krisensituationen sind Informationen selten perfekt. Dieses Szenario testet Entscheidungsfindung unter maximaler Unsicherheit - die vielleicht schwierigste Situation für einen Präsidenten.'
   }
