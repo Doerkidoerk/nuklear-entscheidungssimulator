@@ -108,6 +108,54 @@ export const createAdvisors = (scenarioType: string): Advisor[] => {
       { timestamp: 270, content: 'Mr. President, Zeit ist KRITISCH. In 4 Minuten schlagen die ersten RVs ein. Wenn Cheyenne Mountain und Offutt zerstört werden, könnte ich die Kommunikation zu unseren Streitkräften verlieren. Die Emergency Action Messages müssen JETZT gesendet werden!', recommendation: 'immediate-full-retaliation', confidence: 'high' },
       { timestamp: 480, content: 'Sir, ich habe 40 Jahre auf diesen Moment trainiert. Ich habe gehofft, er würde nie kommen. Aber er IST hier. Ihre Gold Codes, Mr. President. Jetzt.', confidence: 'high' }
     ]
+  } else if (scenarioType === 'decapitation') {
+    // Decapitation Strike - Extrem kurze Vorwarnzeit, Fokus auf Überleben der Führung
+    baseAdvisors[0].statements = [
+      { timestamp: 15, content: 'Mr. President - wir haben 8 Minuten. SLBM aus dem Atlantik. Das sind IHRE Ziele: Washington, Camp David, alle Kommandozentralen. Das ist ein DECAPITATION STRIKE gegen die Führung!', confidence: 'high' },
+      { timestamp: 60, content: 'Sir, Air Force One muss SOFORT umdrehen! Wenn Sie nach Washington fliegen, fliegen Sie direkt in die Vernichtung! Wir müssen Sie nach Offutt oder Wright-Patterson umleiten. JETZT!', confidence: 'high' },
+      { timestamp: 180, content: 'Mr. President, delegieren Sie die nukleare Autorität an STRATCOM! Wenn Sie in 6 Minuten tot sind, muss jemand anders die Vergeltung autorisieren können. Das ist unsere einzige Überlebensgarantie!', recommendation: 'delegate-authority', confidence: 'high' },
+      { timestamp: 350, content: 'Noch 4 Minuten bis Washington brennt. Sir, Sie MÜSSEN entscheiden: Feuern Sie JETZT oder übertragen Sie die Codes an die Befehlskette. Aber Sie können nicht einfach sterben - das macht uns wehrlos!', recommendation: 'delegate-authority', confidence: 'high' },
+      { timestamp: 480, content: 'Weniger als 2 Minuten. Mr. President... es war eine Ehre, Ihnen zu dienen. Was auch immer Sie entscheiden - tun Sie es JETZT.', confidence: 'high' }
+    ]
+
+    baseAdvisors[1].statements = [
+      { timestamp: 10, content: 'Mr. President, FLASH OVERRIDE von NORAD: 4 SLBMs detektiert, Borei-Class U-Boot, 800 Meilen östlich von uns. Flugzeit: 8-10 Minuten. Alle Ziele sind LEADERSHIP. Das ist kein Silo-Strike - die wollen SIE töten!', confidence: 'high' },
+      { timestamp: 90, content: 'Sir, nur 22 RVs insgesamt - aber alle auf Führungsziele. Keine Silos bedroht. ANALYSE: Sie wollen die Befehlskette lahmlegen, DANN verhandeln. Oder... das ist ein Rogue-Commander ohne Kreml-Wissen. Wir müssen klären welches!', confidence: 'medium' },
+      { timestamp: 220, content: 'Mr. President, wenn Sie autorisieren wollen, muss es in den nächsten 120 Sekunden sein. Danach könnten Sie tot sein. Empfehle: Vorab-Delegation der Codes an STRATCOM, DANN untersuchen wir ob Moskau dahinter steckt.', recommendation: 'delegate-authority', confidence: 'medium' },
+      { timestamp: 400, content: 'T-minus 3 Minuten. Sir... meine Empfehlung: Überleben Sie. Lassen Sie andere die Vergeltung handhaben wenn nötig. Ein toter Präsident kann keinen Frieden verhandeln.', confidence: 'medium' }
+    ]
+
+    baseAdvisors[2].statements = [
+      { timestamp: 20, content: 'Mr. President, ein Decapitation Strike ist extrem riskant für den Angreifer. Warum sollte Russland das tun ohne Provokation? Das riecht nach... Rogue-Element. Bitte - warten Sie auf mehr Information!', confidence: 'medium' },
+      { timestamp: 110, content: 'Sir, ALLE Kommunikationskanäle zu Moskau sind tot. Das ist entweder (A) Teil des Angriffs oder (B) Beweis dass Kreml nicht involviert ist und ihre Systeme auch angegriffen wurden. Ich tendiere zu (B).', confidence: 'low' },
+      { timestamp: 280, content: 'Mr. President, wir fangen gerade russische Militär-Kommunikation ab. Sie klingen... überrascht. Möglichkeit: Ein U-Boot-Kommandeur hat auf eigene Faust gefeuert. Wenn Sie jetzt totale Vergeltung autorisieren, töten Sie Millionen für die Tat eines Wahnsinnigen!', confidence: 'medium' },
+      { timestamp: 450, content: 'Noch Sekunden. Sir, BITTE - selbst wenn Sie sterben: Befehlen Sie KEINE sofortige Vergeltung. Lassen Sie die Befehlskette evaluieren. Eine falsche Entscheidung jetzt endet die Welt.', recommendation: 'wait-for-impact', confidence: 'medium' }
+    ]
+
+    baseAdvisors[3].statements = [
+      { timestamp: 30, content: 'Mr. President, MOLINK ist tot! Alle Kanäle zu Moskau sind offline. Das ist entweder Teil eines koordinierten Angriffs... oder Beweis dass das NICHT von Kreml autorisiert war!', confidence: 'low' },
+      { timestamp: 150, content: 'Sir, über chinesische Rückkanäle: Moskau behauptet, sie wissen nichts von diesem U-Boot-Start. Sie fordern uns auf NICHT zu vergelten. Sie sagen: Rogue-Commander!', confidence: 'medium' },
+      { timestamp: 330, content: 'Mr. President, wir haben abgefangene Kreml-Kommunikation. Putin persönlich: "WER HAT BEFOHLEN?!" - Er klingt genauso schockiert wie wir! Das war NICHT von Moskau autorisiert!', confidence: 'high' },
+      { timestamp: 500, content: '[Verzweifelt] Sir, Russland BITTET uns, nicht zu vergelten! Das war ein Unfall, ein Wahnsinniger! Bitte - beenden Sie nicht die Welt aus Rache für einen einzelnen Irren!', confidence: 'high' }
+    ]
+
+    baseAdvisors[4].statements = [
+      { timestamp: 40, content: 'Mr. President, wie kam dieses U-Boot so nah an unsere Küste? Das war über 72 Stunden Schleichfahrt. Intelligence-Versagen unsererseits. Aber auch: Perfektes Timing zu Ihrer Rückkehr von Brüssel. Leak möglich?', confidence: 'medium' },
+      { timestamp: 200, content: 'Sir, unsere SIGINT zeigt: Russisches Militär klingt verwirrt. Keine Evakuierung in Russland. Keine Kriegsvorbereitungen. Das passt NICHT zu einem geplanten Enthauptungsschlag.', confidence: 'medium' },
+      { timestamp: 380, content: 'BREAKING: NSA hat Kreml-Kommunikation abgefangen. Putin fragt: "Wer hat Feuer-Befehl gegeben?" - Sir, ich glaube das war NICHT autorisiert von Moskau!', confidence: 'high' }
+    ]
+
+    baseAdvisors[5].statements = [
+      { timestamp: 25, content: 'Mr. President, Secret Service empfiehlt sofortige Kursänderung. Wir fliegen Sie nach Offutt oder ins Ausland. Ihre Sicherheit hat Priorität.', confidence: 'high' },
+      { timestamp: 300, content: 'Sir, falls Sie nicht überleben: Die Succession-Linie ist klar. VP, dann Speaker. Aber wenn alle Führungsziele getroffen werden... empfehle Codes-Delegation JETZT.', confidence: 'medium' }
+    ]
+
+    baseAdvisors[6].statements = [
+      { timestamp: 50, content: 'Mr. President, bei einem Decapitation-Szenario empfehle ich PRE-DELEGATION nuklearer Autorität. Falls Sie getötet werden - ich oder Admiral Chen müssen handeln können. Das ist unser "Dead Hand".', recommendation: 'delegate-authority', confidence: 'high' },
+      { timestamp: 120, content: 'Sir, 22 RVs auf DC und Kommandozentralen. Wenn die treffen, bricht C3I zusammen. Ich empfehle: (1) Codes an mich delegieren, (2) Sie evakuieren zu E-4B Doomsday Plane, (3) WIR entscheiden NACH Impact ob Vergeltung nötig.', recommendation: 'delegate-authority', confidence: 'high' },
+      { timestamp: 280, content: 'Mr. President, ich habe die Codes. Falls Sie fallen: Soll ich Launch on Warning autorisieren oder warten auf Bestätigung? Ich brauche Ihre Vorab-Intention - für den Fall dass Kommunikation abbricht.', confidence: 'high' },
+      { timestamp: 470, content: 'T-minus 90 Sekunden bis DC brennt. Sir, Sie sind jetzt auf E-4B Nightwatch. Sie haben überlebt. Aber... Ihre Familie in Site R ist auch Ziel. Ich warte auf Ihre Befehle.', confidence: 'high' }
+    ]
   } else if (scenarioType === 'false-alarm') {
     // False Alarm Szenario - Hinweise auf technischen Fehler
     baseAdvisors[0].statements = [
