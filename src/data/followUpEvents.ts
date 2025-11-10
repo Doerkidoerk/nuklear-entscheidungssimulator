@@ -479,6 +479,306 @@ export const fullRetaliationFollowUpEvents: FollowUpEvent[] = [
 ]
 
 // ===========================================
+// 11. BACKCHANNELS ACTIVATE
+// ===========================================
+const backchannelsActivateEvents: FollowUpEvent[] = [
+  {
+    id: 'backchannel-evt-1',
+    timestamp: 0,
+    triggerDelay: 60,
+    relativeToDecision: true,
+    type: 'diplomatic-message',
+    priority: 'high',
+    source: 'State Department',
+    title: 'Schweizer Botschafter kontaktiert Moskau',
+    content: 'Schweizer Außenministerium (als neutraler Vermittler) kontaktiert russisches Außenministerium über sichere Linien. Nachricht übermittelt: "USA meldet nukleare Starts aus Ihrem Territorium. Können Sie dies bestätigen oder dementieren? Dringende Antwort erforderlich zur Verhinderung von Eskalation."',
+  },
+  {
+    id: 'backchannel-evt-2',
+    timestamp: 0,
+    triggerDelay: 150,
+    relativeToDecision: true,
+    type: 'diplomatic-message',
+    priority: 'critical',
+    source: 'State Department',
+    title: 'Chinesischer Außenminister berichtet',
+    content: 'Beijing meldet zurück über Backchannel: "Wir haben mit Kreml gesprochen. Ihre Reaktion: TOTALE ÜBERRASCHUNG. Außenminister Lawrow persönlich sagt, er hat keine Kenntnis von militärischen Operationen. Putin wurde aus Bett geholt. Aber: Militär könnte ohne zivile Autorisierung gehandelt haben."',
+  },
+  {
+    id: 'backchannel-evt-3',
+    timestamp: 0,
+    triggerDelay: 240,
+    relativeToDecision: true,
+    type: 'diplomatic-message',
+    priority: 'high',
+    source: 'State Department',
+    title: 'Backchannel bestätigt: Kreml dementiert',
+    content: 'Schweiz meldet Antwort aus Moskau: "Russische Regierung dementiert kategorisch jeden nuklearen Start. Bieten sofortige Joint-Verification mit internationalem Team an. Fordern Gegendaten von USA. Aber WARNUNG: Wenn Sie feuern basierend auf Fehlalarm, werden wir zurückfeuern müssen." Keine offizielle MOLINK-Bestätigung.',
+  },
+  {
+    id: 'backchannel-evt-4',
+    timestamp: 0,
+    triggerDelay: 300,
+    relativeToDecision: true,
+    type: 'intelligence-report',
+    priority: 'high',
+    source: 'CIA',
+    title: 'Backchannel-Einschätzung',
+    content: 'CIA-Analyse der Backchannel-Kommunikation: "Ton und Inhalt wirken authentisch überrascht. ABER: Backchannels können manipuliert sein. Wenn Russian GRU/FSB unsere Kommunikationslinien kompromittiert hat, könnten sie fake responses senden. Confidence: 65% echte Verwirrung, 35% Täuschung möglich."',
+  },
+]
+
+// ===========================================
+// 12. SSBN DEEP DIVE
+// ===========================================
+const ssbnDeepDiveEvents: FollowUpEvent[] = [
+  {
+    id: 'ssbn-evt-1',
+    timestamp: 0,
+    triggerDelay: 30,
+    relativeToDecision: true,
+    type: 'military-status',
+    priority: 'high',
+    source: 'STRATCOM',
+    title: 'U-Boot-Flotte taucht ab',
+    content: '14 Ohio-Class SSBNs erhalten Emergency Deep Dive Order. Ziel: Maximale operative Tiefe (600+ Meter). Kommunikation wird reduziert auf ELF (Extremely Low Frequency) - nur noch Empfang von wenigen Zeichen pro Minute. Sie werden nahezu unlokalisierbar. Second-Strike capability 100% gesichert.',
+  },
+  {
+    id: 'ssbn-evt-2',
+    timestamp: 0,
+    triggerDelay: 120,
+    relativeToDecision: true,
+    type: 'military-status',
+    priority: 'high',
+    source: 'Pentagon',
+    title: 'Zweitschlagfähigkeit gesichert',
+    content: 'Alle 14 SSBNs auf Tiefe, Position optimal verteilt: Pazifik (6), Atlantik (5), Arktis (3). Insgesamt 1.120 Sprengköpfe auf Trident-II-Raketen. Selbst wenn alle Landsilos, alle Bomber, alle Kommandozentralen zerstört werden - diese U-Boote überleben und können vergolten. MAD (Mutually Assured Destruction) ist garantiert.',
+  },
+  {
+    id: 'ssbn-evt-3',
+    timestamp: 0,
+    triggerDelay: 180,
+    relativeToDecision: true,
+    type: 'intelligence-report',
+    priority: 'critical',
+    source: 'NSA',
+    title: 'Russland erhöht ASW-Aktivität',
+    content: 'SIGINT: Russische Navy aktiviert alle ASW (Anti-Submarine Warfare) Assets. Tu-142 U-Boot-Jäger starten von Kola-Peninsula. Sonar-Bojen werden massiv ausgebracht im Nordatlantik. Sie WISSEN dass unsere SSBNs auf Tiefe sind und versuchen sie zu lokalisieren. Aber unsere Boote sind extrem leise - Lokalisierung nahezu unmöglich.',
+  },
+]
+
+// ===========================================
+// 13. ACTIVATE MISSILE DEFENSE
+// ===========================================
+const activateMissileDefenseEvents: FollowUpEvent[] = [
+  {
+    id: 'defense-evt-1',
+    timestamp: 0,
+    triggerDelay: 20,
+    relativeToDecision: true,
+    type: 'military-status',
+    priority: 'high',
+    source: 'Pentagon',
+    title: 'GMD System auf Maximum',
+    content: 'Ground-based Midcourse Defense aktiviert: Fort Greely (Alaska): 40 GBI ready. Vandenberg SFB (Kalifornien): 4 GBI ready. Alle 44 Interceptors scharf. X-Band Radars in Beobachtungsposition. AN/TPY-2 Radars optimal ausgerichtet. System bereit für Abfangversuche.',
+  },
+  {
+    id: 'defense-evt-2',
+    timestamp: 0,
+    triggerDelay: 90,
+    relativeToDecision: true,
+    type: 'military-status',
+    priority: 'high',
+    source: 'Pentagon',
+    title: 'Aegis und THAAD aktiviert',
+    content: 'AEGIS-Schiffe mit SM-3 Interceptors positioniert: 12 Zerstörer im Pazifik, 8 im Atlantik. THAAD-Batterien auf Guam, Japan, Europa aktiviert. Terminal-Phase Abwehr bereit. Patriot PAC-3 weltweit auf Maximum. Mehrschichtiges Abwehrsystem operational.',
+  },
+  {
+    id: 'defense-evt-3',
+    timestamp: 0,
+    triggerDelay: 180,
+    relativeToDecision: true,
+    type: 'intelligence-report',
+    priority: 'critical',
+    source: 'Pentagon',
+    title: 'Realistische Erfolgsrate-Modellierung',
+    content: 'Simulationen gegen 20 RVs (Reentry Vehicles) mit Decoys: GMD Abfangrate: 30-40% (optimistisch). Bei massivem Angriff (100+ RVs): 12-18% realistisch. KRITISCH: System ist gegen begrenzten Angriff (Nordkorea-Szenario) konzipiert, NICHT gegen russische Salve. Kann einige Städte retten, aber nicht alle.',
+  },
+  {
+    id: 'defense-evt-4',
+    timestamp: 0,
+    triggerDelay: 240,
+    relativeToDecision: true,
+    type: 'intelligence-report',
+    priority: 'high',
+    source: 'NSA',
+    title: 'Russland erhöht Decoy-Produktion',
+    content: 'SIGINT: Russisches Militär aktiviert zusätzliche Täuschkörper (Decoys) und Penetrationshilfen. Jede ICBM wird nun begleitet von 3-5 Ballons und Chaffs die identisch aussehen auf Radar. Unser Abwehrsystem muss echte RVs von Fakes unterscheiden - extrem schwierig. Erfolgsrate sinkt auf geschätzt 8-12%.',
+  },
+]
+
+// ===========================================
+// 14. DEMONSTRATION STRIKE
+// ===========================================
+const demonstrationStrikeEvents: FollowUpEvent[] = [
+  {
+    id: 'demo-evt-1',
+    timestamp: 0,
+    triggerDelay: 45,
+    relativeToDecision: true,
+    type: 'military-status',
+    priority: 'critical',
+    source: 'STRATCOM',
+    title: 'Gold Codes übermittelt - EINZELNER Sprengkopf',
+    content: 'Emergency Action Message für Warren AFB, Wyoming. EINE Minuteman III wird vorbereitet. Payload: EINZELNER W87 Sprengkopf (475 Kilotonnen). Ziel: Novaya Zemlya, russische Testinsel in Arktis - unbewohnt seit 1950er Jahren. Koordinaten: 73°N, 55°E. Dies ist beispiellos - atomarer Warnschuss.',
+  },
+  {
+    id: 'demo-evt-2',
+    timestamp: 0,
+    triggerDelay: 120,
+    relativeToDecision: true,
+    type: 'system-alert',
+    priority: 'critical',
+    source: 'STRATCOM',
+    title: 'Minuteman III gestartet',
+    content: 'LAUNCH BESTÄTIGT: Eine ICBM aus Warren AFB airborne. Flugzeit bis Novaya Zemlya: ~18 Minuten. Russische Frühwarnung wird dies SOFORT detektieren. Sie werden einen einzigen Start sehen - aber NICHT wissen wohin er zielt. Kritische Minuten bis sie die Trajectory berechnen können.',
+  },
+  {
+    id: 'demo-evt-3',
+    timestamp: 0,
+    triggerDelay: 180,
+    relativeToDecision: true,
+    type: 'diplomatic-message',
+    priority: 'critical',
+    source: 'State Department',
+    title: 'Moskau auf MOLINK - PANIK',
+    content: 'Direct Voice Link (Putin persönlich, schreiend): "Was zum TEUFEL machen Sie?! Sie haben gefeuert! EIN Start - ist das Demonstration? Täuschung? ERSTE WELLE?! Unsere Systeme zeigen Trajectory zu arktischem Sektor aber... ERKLÄREN SIE SICH SOFORT oder wir müssen als Angriff behandeln!"',
+  },
+  {
+    id: 'demo-evt-4',
+    timestamp: 0,
+    triggerDelay: 300,
+    relativeToDecision: true,
+    type: 'system-alert',
+    priority: 'critical',
+    source: 'NORAD',
+    title: 'Detonation bestätigt - Novaya Zemlya',
+    content: 'Satelliten bestätigen: 475kt Luftdetonation über Novaya Zemlya, 2km Höhe. Keine Opfer (Insel unbewohnt). Seismometer registrieren Magnitude 5.4. Radioaktiver Fallout wird über Arktis abgeweht. ABER: Russland hat ersten atomaren Waffeneinsatz seit 1945 erlebt. Ihre Reaktion: Völlig unvorhersehbar.',
+  },
+  {
+    id: 'demo-evt-5',
+    timestamp: 0,
+    triggerDelay: 360,
+    relativeToDecision: true,
+    type: 'diplomatic-message',
+    priority: 'critical',
+    source: 'State Department',
+    title: 'Putins Reaktion',
+    content: 'MOLINK (Putin, jetzt kalt und kalkuliert): "Sie haben einen atomaren Präzedenzfall gesetzt. Wir verstehen die Botschaft: Sie KÖNNEN und WERDEN feuern. Aber: Sie haben UNSERE Territorium getroffen - auch wenn unbewohnt. Das verlangt Antwort. Wir müssen über einen Deal sprechen. JETZT."',
+  },
+]
+
+// ===========================================
+// 15. EVACUATION ONLY
+// ===========================================
+const evacuationOnlyEvents: FollowUpEvent[] = [
+  {
+    id: 'evac-evt-1',
+    timestamp: 0,
+    triggerDelay: 60,
+    relativeToDecision: true,
+    type: 'system-alert',
+    priority: 'critical',
+    source: 'White House',
+    title: 'Emergency Broadcast - Evakuierung',
+    content: 'Nationale Ansprache: "Dies ist kein Test. Evakuieren Sie sofort alle Großstädte. Begeben Sie sich in Richtung ländliche Gebiete. KEINE Panik - geordnete Evakuierung. Die USA werden NICHT militärisch reagieren. Wir brechen den Cycle of Violence. Gott schütze Amerika." - 330 Mio. Menschen bekommen diese Nachricht.',
+  },
+  {
+    id: 'evac-evt-2',
+    timestamp: 0,
+    triggerDelay: 180,
+    relativeToDecision: true,
+    type: 'system-alert',
+    priority: 'high',
+    source: 'White House',
+    title: 'Massenpanik in Großstädten',
+    content: 'NYC: 8 Millionen Menschen versuchen Manhattan zu verlassen. Alle Brücken und Tunnel verstopft. LA: I-5 und I-10 Parkplätze. Chicago, Houston, Phoenix - überall Chaos. Krankenhäuser überrannt. Tausende Autounfälle. Geschätzt: 50.000-100.000 Tote durch Evakuierungs-Panik selbst - BEVOR ein Sprengkopf landet.',
+  },
+  {
+    id: 'evac-evt-3',
+    timestamp: 0,
+    triggerDelay: 360,
+    relativeToDecision: true,
+    type: 'intelligence-report',
+    priority: 'critical',
+    source: 'NSA',
+    title: 'Russland beobachtet - Verwirrt',
+    content: 'SIGINT: Russische Militärkommunikation zeigt totale Verwirrung. Übersetzt: "USA evakuiert Städte aber KEINE militärische Reaktion?", "Ist das Kapitulation?", "Falle? Warten sie auf unsere Starts zum Lokalisieren?". Kreml offenbar überrascht von dieser beispiellosen Strategie. Keine klare russische Reaktion erkennbar.',
+  },
+  {
+    id: 'evac-evt-4',
+    timestamp: 0,
+    triggerDelay: 480,
+    relativeToDecision: true,
+    type: 'diplomatic-message',
+    priority: 'high',
+    source: 'State Department',
+    title: 'Internationale Reaktion',
+    content: 'UN-Generalsekretär: "Präsident hat außergewöhnlichen Mut gezeigt." China: "Respektvoller Akt." EU: "Moralische Führung." ABER: Pentagon-Interna (leaked): "Wir haben gerade die USA wehrlos gemacht. Wenn das echt ist: 40-60M Tote ohne Vergeltung. Historisch beispiellos - als Heldentat ODER als größter Fehler aller Zeiten."',
+  },
+]
+
+// ===========================================
+// 16. DELEGATE AUTHORITY
+// ===========================================
+const delegateAuthorityEvents: FollowUpEvent[] = [
+  {
+    id: 'delegate-evt-1',
+    timestamp: 0,
+    triggerDelay: 30,
+    relativeToDecision: true,
+    type: 'system-alert',
+    priority: 'critical',
+    source: 'White House',
+    title: 'Nukleare Autorität übertragen',
+    content: 'NORAD/STRATCOM: Nukleare Launch-Autorität wird übertragen an: (1) General Harrison (STRATCOM Commander), (2) Admiral Chen (PACOM Commander), (3) Secretary of Defense als Backup. "Dead Hand"-ähnliches Protokoll aktiviert. Falls Präsident/VP/Cabinet ausgelöscht werden: Militär kann autonom vergolten.',
+  },
+  {
+    id: 'delegate-evt-2',
+    timestamp: 0,
+    triggerDelay: 60,
+    relativeToDecision: true,
+    type: 'military-status',
+    priority: 'critical',
+    source: 'STRATCOM',
+    title: 'General Harrison akzeptiert Autorität',
+    content: 'General Harrison (STRATCOM): "Mr. President, ich verstehe die Verantwortung. Falls Sie... nicht überleben: Ich werde im Namen der Vereinigten Staaten handeln. Mein Eid auf die Verfassung bleibt. Aber wissen Sie: Sobald Militär die Codes hat ohne zivile Aufsicht... Geschichte zeigt, wir tendieren zu härteren Optionen."',
+  },
+  {
+    id: 'delegate-evt-3',
+    timestamp: 0,
+    triggerDelay: 90,
+    relativeToDecision: true,
+    type: 'system-alert',
+    priority: 'high',
+    source: 'White House',
+    title: 'Sie evakuieren zu E-4B Nightwatch',
+    content: 'Secret Service evakuiert Sie zum "Doomsday Plane" - E-4B National Airborne Operations Center. Gepanzerte Boeing 747, fliegende Kommandozentrale. Kann 1 Woche airborne bleiben, überleben atomaren EMP. Von hier können Sie weiter befehligen - falls Sie überleben. Start in 2 Minuten.',
+  },
+  {
+    id: 'delegate-evt-4',
+    timestamp: 0,
+    triggerDelay: 120,
+    relativeToDecision: true,
+    type: 'military-status',
+    priority: 'critical',
+    source: 'STRATCOM',
+    title: 'Harrison fragt nach Strategie',
+    content: 'General Harrison über sichere Leitung: "Sir, Sie sind airborne. Ich habe die Codes falls Sie getötet werden. FRAGE: Wollen Sie dass ich Launch on Warning autorisiere (sofort feuern bei Impact), oder Ride-Out (warten mit U-Boot-Vergeltung)? Ich brauche PRE-DELEGATION Ihrer Intent - falls Kommunikation abbricht."',
+  },
+]
+
+// ===========================================
 // BASE MAPPING - Welche Events für welche Entscheidung
 // ===========================================
 const baseFollowUpEventsByDecision: Record<string, FollowUpEvent[]> = {
@@ -492,6 +792,12 @@ const baseFollowUpEventsByDecision: Record<string, FollowUpEvent[]> = {
   'counterforce-retaliation': counterforceRetaliationEvents,
   'launch-recon-aircraft': launchReconAircraftEvents,
   'immediate-full-retaliation': fullRetaliationFollowUpEvents,
+  'backchannels-activate': backchannelsActivateEvents,
+  'ssbn-deep-dive': ssbnDeepDiveEvents,
+  'activate-missile-defense': activateMissileDefenseEvents,
+  'demonstration-strike': demonstrationStrikeEvents,
+  'evacuation-only': evacuationOnlyEvents,
+  'delegate-authority': delegateAuthorityEvents,
 }
 
 export const followUpEventsByDecision = baseFollowUpEventsByDecision

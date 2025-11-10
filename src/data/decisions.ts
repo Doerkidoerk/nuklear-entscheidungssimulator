@@ -20,7 +20,7 @@ export const initialDecisions: Decision[] = [
     civilianCasualties: 'none',
     requiresConfirmation: false,
     followUpEvents: followUpEventsByDecision['verify-intelligence'],
-    followUpDecisions: ['after-verify-confirmed-false', 'after-verify-still-unclear', 'after-verify-attack-confirmed'],
+    followUpDecisions: ['after-verify-still-wait', 'after-verify-trust-intel', 'after-verify-communicate', 'after-verify-escalate-defcon'],
     consequences: [
       {
         type: 'military',
@@ -84,7 +84,7 @@ export const initialDecisions: Decision[] = [
     civilianCasualties: 'none',
     requiresConfirmation: false,
     followUpEvents: followUpEventsByDecision['emergency-communication'],
-    followUpDecisions: ['after-comm-success', 'after-comm-no-response', 'after-comm-ambiguous'],
+    followUpDecisions: ['after-comm-accept-data-exchange', 'after-comm-reject-russian-data', 'after-comm-demand-proof', 'after-comm-trust-shoigu', 'after-comm-mutual-recall', 'after-comm-mutual-stand-down'],
     consequences: [
       {
         type: 'diplomatic',
