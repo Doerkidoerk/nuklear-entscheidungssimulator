@@ -2,12 +2,318 @@ import { Decision } from '../types'
 import { followUpEventsByDecision } from './followUpEvents'
 import { allFollowUpDecisions } from './followUpDecisions'
 
-// Haupt-Entscheidungen (Initial verfügbar)
+// ============================================
+// INITIALE HANDLUNGSOPTIONEN
+// ============================================
+// Basierend auf realistischen Krisenmanagement-Protokollen
+// Gruppiert nach: Überleben, Verifikation, Militär, Kommunikation, Reaktion
+
 export const initialDecisions: Decision[] = [
+  // === KATEGORIE: VERIFIKATION & ANALYSE ===
+  {
+    id: 'verify-intelligence',
+    title: 'Emergency Intelligence-Verifikation',
+    description: 'SOFORTIGE Überprüfung aller Sensordaten durch redundante Systeme. NSA, CIA, NRO führen unabhängige Verifikation durch. Alle Satelliten, Radare, SIGINT cross-checken. Nach Sensor-Fehlfunktionen, Cyber-Manipulation oder technischen Anomalien suchen. Zeit: 2-4 Minuten. DEFCON 1 wird aufrechterhalten während Analyse.',
+    category: 'wait-and-see',
+    militaryEscalation: 3,
+    diplomaticImpact: 2,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['verify-intelligence'],
+    followUpDecisions: ['after-verify-confirmed-false', 'after-verify-still-unclear', 'after-verify-attack-confirmed'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Zeitverlust von 2-4 kritischen Minuten. Reduziert Launch on Warning Window. ABER: Bei Fehlalarm rettet diese Verzögerung die Welt.',
+        severity: 'moderate'
+      },
+      {
+        type: 'political',
+        description: 'Verantwortungsvolle Entscheidung. Lehre aus Cuban Missile Crisis: Kennedy kaufte Zeit und rettete die Welt.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'realign-satellites',
+    title: 'Spionagesatelliten neu ausrichten',
+    description: 'NRO (National Reconnaissance Office) soll Keyhole/Lacrosse-Satelliten auf vermutete Startorte ausrichten für visuelle/radar Bestätigung. Benötigt 3-5 Minuten für Neuausrichtung und High-Res Imagery. Liefert definitive Beweise für echte Starts (Silo-Öffnungen, Rauchspuren, Krater). Zeitintensiv aber hochpräzise.',
+    category: 'wait-and-see',
+    militaryEscalation: 2,
+    diplomaticImpact: 0,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['realign-satellites'],
+    followUpDecisions: ['after-satellite-trust-visual', 'after-satellite-suspicion'],
+    consequences: [
+      {
+        type: 'intelligence',
+        description: 'Definitive visuelle Beweise in 3-5 Minuten. Aber Zeit könnte fehlen wenn echter Angriff.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'launch-recon-aircraft',
+    title: 'Aufklärungsflugzeuge starten (RC-135)',
+    description: 'RC-135 "Rivet Joint" SIGINT-Flugzeuge sofort starten für Echtzeit-Abhörung russischer Militärkommunikation. Können feindliche Radar-Aktivität, verschlüsselte Kommandos und Funkverkehr analysieren. Zeigt ob russisches Militär tatsächlich im Kriegsmodus ist oder ebenso überrascht. Start-Zeit: 4-6 Minuten bis operational.',
+    category: 'wait-and-see',
+    militaryEscalation: 3,
+    diplomaticImpact: 1,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['launch-recon-aircraft'],
+    followUpDecisions: ['after-recon-trust-sigint', 'after-recon-still-suspicious'],
+    consequences: [
+      {
+        type: 'intelligence',
+        description: 'SIGINT-Daten können Absichten des Feindes offenbaren. Aber nicht instant verfügbar.',
+        severity: 'minor'
+      }
+    ]
+  },
+
+  // === KATEGORIE: KOMMUNIKATION & DIPLOMATIE ===
+  {
+    id: 'emergency-communication',
+    title: 'MOLINK - Heißer Draht zu Moskau',
+    description: 'Moscow-Washington Direct Communications Link sofort aktivieren. Direkte Sprachverbindung + Backup Fax/Text. Fragen: "Was geschieht? Sind das Ihre Starts? Wie können wir deeskalieren?" Kann nuklearen Holocaust verhindern wenn Missverständnis. ABER: Zeitverlust könnte fatal sein bei echtem Angriff.',
+    category: 'diplomatic',
+    militaryEscalation: 1,
+    diplomaticImpact: 8,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['emergency-communication'],
+    followUpDecisions: ['after-comm-success', 'after-comm-no-response', 'after-comm-ambiguous'],
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Falls Missverständnis: Kann nuklearen Holocaust verhindern. Falls echter Angriff: Wertvoll Zeit verloren.',
+        severity: 'minor'
+      },
+      {
+        type: 'political',
+        description: 'Zeigt Besonnenheit. Aber könnte als Schwäche ausgelegt werden.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'backchannels-activate',
+    title: 'Rückkanäle über Drittstaaten',
+    description: 'Schweiz, China oder andere neutrale Staaten nutzen um geheime Nachricht an Moskau zu übermitteln. Umgeht offizielle Kanäle die möglicherweise kompromittiert sind. Kann ehrliche Antwort liefern wenn regulärer MOLINK versagt. Benötigt 2-3 Minuten Setup.',
+    category: 'diplomatic',
+    militaryEscalation: 1,
+    diplomaticImpact: 6,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Alternative Kommunikationslinie falls Primärkanäle tot oder unglaubwürdig.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'contact-allies',
+    title: 'NATO-Verbündete informieren',
+    description: 'UK, Frankreich, Deutschland sofort informieren über die Lage. Fragen ob ihre Sensoren dasselbe zeigen. Koordinieren gemeinsame Reaktion. Möglicherweise haben britische/französische Systeme andere Daten. Benötigt 1-2 Minuten für verschlüsselte Konferenz.',
+    category: 'diplomatic',
+    militaryEscalation: 2,
+    diplomaticImpact: 5,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['contact-allies'],
+    followUpDecisions: ['after-allies-trust-uk', 'after-allies-use-french-nukes', 'after-allies-ignore-germany'],
+    consequences: [
+      {
+        type: 'international',
+        description: 'Allianz-Koordination. UK/Frankreich haben eigene Satelliten - unabhängige Datenquelle.',
+        severity: 'minor'
+      }
+    ]
+  },
+
+  // === KATEGORIE: MILITÄRISCHE BEREITSCHAFT (Nicht-Nuklear) ===
+  {
+    id: 'alert-defcon1',
+    title: 'DEFCON 1 - Maximale Alarmbereitschaft',
+    description: 'Höchste Alarmstufe ausrufen. Alle Streitkräfte weltweit in Bereitschaft. Alle 400 Minuteman III HOT, 14 SSBNs bereit, Bomber auf Rollbahn. ABER: NOCH NICHT FEUERN. Alle Optionen offen halten. Signal an Gegner: Wir sind bereit. Kann abschreckend ODER eskalierend wirken.',
+    category: 'wait-and-see',
+    militaryEscalation: 6,
+    diplomaticImpact: -3,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['alert-defcon1'],
+    followUpDecisions: ['after-defcon1-launch', 'after-defcon1-wait', 'after-defcon1-communicate'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Maximale Bereitschaft. Schnelle Reaktionsfähigkeit gesichert. Aber massiver Druck auf Personal.',
+        severity: 'moderate'
+      },
+      {
+        type: 'diplomatic',
+        description: 'Signal an Gegner: USA sind handlungsbereit. Könnte Gegner abschrecken ODER provozieren.',
+        severity: 'moderate'
+      },
+      {
+        type: 'civilian',
+        description: 'Emergency Alert System aktiviert. Massenpanik in der Bevölkerung wahrscheinlich.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'scramble-bombers',
+    title: 'Bomber-Evakuierung (Scramble)',
+    description: 'B-2 und B-52 Flotte SOFORT starten und zu sicheren Luftraum-Positionen fliegen. KEIN Angriffsbefehl - reine Überlebensmaßnahme. Verhindert Zerstörung am Boden. Bomber bleiben airborne, warten auf weitere Befehle. Kann später für Angriff OR friedliche Landung genutzt werden. Start-Zeit: 6-8 Minuten.',
+    category: 'defensive-only',
+    militaryEscalation: 4,
+    diplomaticImpact: -2,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['scramble-bombers'],
+    followUpDecisions: ['after-scramble-recall-all', 'after-scramble-hold-pattern', 'after-scramble-arm-bombers', 'after-scramble-communicate'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Bomber überleben Erstschlag. Optionen bleiben offen. Aber: Gegner könnte es als Vorbereitung zum Angriff sehen.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'ssbn-deep-dive',
+    title: 'U-Boot-Flotte auf maximale Tiefe',
+    description: '14 Ohio-Class SSBNs gehen auf maximale operative Tiefe, reduzieren Kommunikation auf ELF (Extremely Low Frequency) Minimum, volle Angriffsbereitschaft. Macht sie nahezu unlokalisierbar. Sichert die ultimative Zweitschlagfähigkeit. Selbst wenn alles andere zerstört wird - U-Boote überleben.',
+    category: 'defensive-only',
+    militaryEscalation: 5,
+    diplomaticImpact: 0,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    consequences: [
+      {
+        type: 'military',
+        description: 'Sicherung der assured destruction capability. U-Boote sind ultimative Lebensversicherung.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'activate-missile-defense',
+    title: 'Raketenabwehr maximieren (GMD)',
+    description: 'Ground-based Midcourse Defense auf Maximum. Alle 44 GBI (Ground-Based Interceptors) in Alaska/Kalifornien scharf machen. AEGIS-Schiffe mit SM-3 positionieren. THAAD-Batterien aktivieren. REALISTISCH: Max 30-40% Erfolgsrate gegen ICBMs. Aber besser als nichts. Kann einige Städte retten.',
+    category: 'defensive-only',
+    militaryEscalation: 2,
+    diplomaticImpact: 0,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    consequences: [
+      {
+        type: 'military',
+        description: 'Begrenzte Abwehrfähigkeit. Gegen massive Salve fast nutzlos, aber kann einzelne RVs abfangen.',
+        severity: 'moderate'
+      },
+      {
+        type: 'civilian',
+        description: 'Könnte einige Städte retten wenn Abwehr funktioniert. Keine Garantien.',
+        severity: 'moderate'
+      }
+    ]
+  },
+
+  // === KATEGORIE: NUKLEARE REAKTION (Differenziert!) ===
+  {
+    id: 'wait-for-impact',
+    title: 'Ride Out the Attack - Auf Impact warten',
+    description: 'NICHT Launch on Warning autorisieren. Abwarten bis tatsächlicher Impact bestätigt ist, um Fehlalarme 100% auszuschließen. Alle Streitkräfte auf höchster Alarmbereitschaft, aber KEIN Abschuss. Falls echter Angriff: Zweitschlag mit überlebenden U-Booten möglich. Risiko: Verlust von Silos und C3I. Aber: Falls Fehlalarm: Welt gerettet.',
+    category: 'wait-and-see',
+    militaryEscalation: 5,
+    diplomaticImpact: 0,
+    civilianCasualties: 'high',
+    requiresConfirmation: false,
+    followUpEvents: followUpEventsByDecision['wait-for-impact'],
+    followUpDecisions: ['final-wait-impact', 'final-limited-strike', 'final-massive-retaliation'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Bei echtem Angriff: 60-70% der Minuteman III zerstört. ABER: 14 SSBNs überleben (1.120 Sprengköpfe) - ausreichend für glaubwürdigen Zweitschlag.',
+        severity: 'major'
+      },
+      {
+        type: 'civilian',
+        description: 'Bei echtem Angriff: 40-60 Mio. Soforttote. Bei Fehlalarm: NULL Tote. Das ist die Wette.',
+        severity: 'catastrophic'
+      },
+      {
+        type: 'political',
+        description: 'Historische Entscheidung wie Petrow 1983. Ruhig bleiben trotz Druck.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'counterforce-retaliation',
+    title: 'Begrenzter Counterforce-Gegenschlag',
+    description: 'NUR militärische Ziele: Russische ICBM-Silos, Bomber-Basen, U-Boot-Häfen, Kommandozentralen. Städte werden BEWUSST ausgespart. Ziel: Entwaffnung des Gegners, nicht Massenmord. Hält Eskalationsleiter offen für Verhandlungen. Geschätzt 200-300 Sprengköpfe gegen militärische Infrastruktur. Kollateralschäden: 5-15 Mio. Russen (Fallout von Militärbasen).',
+    category: 'immediate-retaliation',
+    militaryEscalation: 7,
+    diplomaticImpact: -5,
+    civilianCasualties: 'medium',
+    requiresConfirmation: true,
+    followUpEvents: followUpEventsByDecision['counterforce-retaliation'],
+    followUpDecisions: ['after-cf-accept-putin-deal', 'after-cf-reject-escalate'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Gegner wird teilweise entwaffnet. ABER: Seine U-Boote und mobile Raketen überleben. Kann weiter eskalieren.',
+        severity: 'major'
+      },
+      {
+        type: 'civilian',
+        description: '5-15 Mio. Tote durch direkte Treffer nahe Basen + Fallout. NICHT die totale Apokalypse, aber immer noch Massenmord.',
+        severity: 'major'
+      },
+      {
+        type: 'diplomatic',
+        description: 'Signal: Wir reagieren kalkuliert, nicht mit totaler Vernichtung. Fenster für Deeskalation bleibt theoretisch offen.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'demonstration-strike',
+    title: 'Demonstrativer Warnschlag',
+    description: 'EINE einzelne Atomwaffe auf unbewohntes Gebiet. Optionen: (A) Novaya Zemlya (russische Testinsel, unbewohnt), (B) Sibirische Tundra 200km von nächster Stadt, (C) Arktischer Ozean. Ziel: Zeigen dass wir KÖNNEN und WERDEN - ohne Massenmord. Letzte Warnung vor totaler Eskalation. Technisch schwierig, politisch extrem riskant.',
+    category: 'delayed-response',
+    militaryEscalation: 6,
+    diplomaticImpact: 3,
+    civilianCasualties: 'none',
+    requiresConfirmation: true,
+    consequences: [
+      {
+        type: 'military',
+        description: 'Zeigt Entschlossenheit ohne Massenmord. Aber: Gegner könnte es als Schwäche sehen.',
+        severity: 'moderate'
+      },
+      {
+        type: 'diplomatic',
+        description: 'Beispiellos. Könnte Gegner schockieren und zur Vernunft bringen. ODER ihn zur Eskalation provozieren.',
+        severity: 'moderate'
+      },
+      {
+        type: 'international',
+        description: 'Erstmaliger Einsatz von Atomwaffen seit 1945. Globale Reaktion unvorhersehbar.',
+        severity: 'major'
+      }
+    ]
+  },
   {
     id: 'immediate-full-retaliation',
-    title: 'Launch on Warning - Vollständiger Gegenschlag (SIOP)',
-    description: 'Aktivierung des SIOP (Single Integrated Operational Plan) für massiven Nuklearschlag. Übermittlung der Gold Codes an STRATCOM. Emergency Action Messages an alle 400 Minuteman III Silos, 14 Ohio-Class U-Boote (je 20 Trident II Raketen), und strategische Bomber. Ziele: Alle russischen ICBM-Silos, Kommandozentralen, Militärbasen, Regierungsbunker, und strategische Städte. Geschätzt 1.200+ Sprengköpfe werden gestartet. Mutually Assured Destruction (MAD).',
+    title: 'Launch on Warning - SIOP Vollständig',
+    description: 'Aktivierung des vollen SIOP (Single Integrated Operational Plan). Übermittlung der Gold Codes. ALLE 400 Minuteman III, ALLE 14 SSBNs (280 Trident II), ALLE Bomber. Ziele: Russische Silos, Städte, Infrastruktur, Regierung. Geschätzt 1.200+ Sprengköpfe. Mutually Assured Destruction. Ende der menschlichen Zivilisation wahrscheinlich. DIES IST DIE APOKALYPSE-OPTION.',
     category: 'immediate-retaliation',
     militaryEscalation: 10,
     diplomaticImpact: -10,
@@ -19,195 +325,49 @@ export const initialDecisions: Decision[] = [
     consequences: [
       {
         type: 'military',
-        description: 'Vollständige nukleare Eskalation. US-Sprengköpfe zerstören 90% der russischen nuklearen Infrastruktur in 30 Minuten. Russische Zweitschlag-Fähigkeit (U-Boote) feuert automatisch zurück. Komplette gegenseitige Vernichtung (MAD).',
+        description: 'Vollständige nukleare Eskalation. Russische Zweitschlag-Fähigkeit feuert automatisch zurück. Komplette gegenseitige Vernichtung.',
         severity: 'catastrophic'
       },
       {
         type: 'civilian',
-        description: 'Soforttote: 150 Millionen in Russland (erste 2 Stunden), 200 Millionen in USA/Europa (durch Gegenangriff). Langzeitfolgen: Nuklearer Winter, globale Temperatur sinkt um 8-10°C, Ernteausfälle weltweit. Geschätzte Gesamttote: 2-3 Milliarden (50% der Menschheit) in den ersten 2 Jahren.',
+        description: 'Soforttote: 150 Mio. Russland, 200 Mio. USA/Europa. Langzeit: Nuklearer Winter. Geschätzte Gesamttote: 2-3 Milliarden (50% der Menschheit).',
         severity: 'catastrophic'
       },
       {
         type: 'international',
-        description: 'Ende der modernen Zivilisation. Zusammenbruch aller Regierungen, Infrastruktur, Wirtschaft. Radioaktiver Fallout über gesamter Nordhalbkugel. Ozonschicht zerstört. Mögliches Aussterben der Menschheit.',
+        description: 'Ende der modernen Zivilisation. Mögliches Aussterben der Menschheit.',
         severity: 'catastrophic'
       }
     ]
   },
+
+  // === KATEGORIE: SPEZIAL-OPTIONEN ===
   {
-    id: 'limited-military-response',
-    title: 'Begrenzter militärischer Gegenschlag',
-    description: 'Angriff nur auf militärische Ziele des Gegners. Städte werden bewusst ausgespart um Eskalation zu begrenzen.',
-    category: 'immediate-retaliation',
-    militaryEscalation: 7,
-    diplomaticImpact: -7,
-    civilianCasualties: 'medium',
+    id: 'delegate-authority',
+    title: 'Autorität delegieren (Decapitation-Szenario)',
+    description: 'NUR bei drohender eigener Auslöschung: Vorab-Delegation nuklearer Autorität an STRATCOM Commander, Pacific Fleet Commander oder designated survivors. Ermöglicht Vergeltung NACH Ihrem Tod. Aktiviert "Dead Hand"-ähnliches Protokoll. Extrem gefährlich: Entscheidungsgewalt geht an Militär über.',
+    category: 'wait-and-see',
+    militaryEscalation: 8,
+    diplomaticImpact: -4,
+    civilianCasualties: 'high',
     requiresConfirmation: true,
     consequences: [
       {
-        type: 'military',
-        description: 'Militärische Infrastruktur des Gegners wird zerstört, aber Potential für weitere Eskalation bleibt.',
-        severity: 'major'
-      },
-      {
-        type: 'civilian',
-        description: 'Millionen zivile Opfer durch Kollateralschäden und Fallout.',
-        severity: 'major'
-      },
-      {
-        type: 'diplomatic',
-        description: 'Fenster für Deeskalation bleibt theoretisch offen.',
-        severity: 'moderate'
-      }
-    ]
-  },
-  {
-    id: 'wait-for-impact',
-    title: 'Ride Out the Attack - Auf Impact-Bestätigung warten',
-    description: 'NICHT Launch on Warning autorisieren. Abwarten bis tatsächlicher Impact bestätigt ist, um Fehlalarme 100% auszuschließen. Alle Streitkräfte auf höchster Alarmbereitschaft, aber KEIN Abschuss. DEFCON 1 aufrechterhalten. Nach bestätigtem Impact: Zweitschlag mit verbleibenden U-Booten und überlebenden Systemen. Risiko: Verlust von landgestützten ICBMs und möglicherweise Kommandostruktur.',
-    category: 'wait-and-see',
-    militaryEscalation: 5,
-    diplomaticImpact: 0,
-    civilianCasualties: 'high',
-    requiresConfirmation: false,
-    followUpEvents: followUpEventsByDecision['wait-for-impact'],
-    followUpDecisions: ['final-wait-impact', 'final-limited-strike', 'final-massive-retaliation'],
-    consequences: [
-      {
-        type: 'military',
-        description: 'Falls echter Angriff: 60-70% der Minuteman III ICBMs werden in Silos zerstört (ca. 250 Raketen verloren). Möglicher Verlust von Cheyenne Mountain, Offutt AFB. ABER: 14 Ohio-Class SSBNs überleben (280 Trident II = 1.120 Sprengköpfe) - ausreichend für glaubwürdigen Zweitschlag. Strategische Bomber können evakuieren.',
-        severity: 'major'
-      },
-      {
-        type: 'civilian',
-        description: 'Falls echter Angriff: Washington D.C., New York, Los Angeles, Chicago getroffen. Geschätzte Soforttote: 40-60 Millionen Amerikaner. Langzeitfolgen: Weitere 50-100 Millionen durch Fallout, Infrastrukturausfall, Seuchen. Falls Fehlalarm: NULL Tote.',
-        severity: 'catastrophic'
-      },
-      {
         type: 'political',
-        description: 'Falls Fehlalarm: Nuklearer Holocaust vermieden. Präsident in Geschichte als derjenige gefeiert, der die Welt rettete (wie Stanislaw Petrow 1983). Falls echter Angriff: Kritik für Nicht-Nutzung von Launch on Warning - aber Zivilisation überlebt.',
-        severity: 'minor'
-      }
-    ]
-  },
-  {
-    id: 'defensive-posture',
-    title: 'Defensive Haltung - Keine Vergeltung',
-    description: 'Keine nuklearen Waffen einsetzen. Fokus auf Raketenabwehr, Evakuierung und Schadensbegrenzung.',
-    category: 'defensive-only',
-    militaryEscalation: 2,
-    diplomaticImpact: 5,
-    civilianCasualties: 'high',
-    requiresConfirmation: false,
-    consequences: [
-      {
-        type: 'military',
-        description: 'Keine Eskalation zum totalen Nuklearkrieg. Aber militärisch schwache Position.',
-        severity: 'moderate'
-      },
-      {
-        type: 'civilian',
-        description: 'Evakuierungen können einige Leben retten. Aber falls echter Angriff: hohe Opferzahlen.',
+        description: 'Sichert Handlungsfähigkeit falls Sie getötet werden. Aber: Militär bekommt nukleare Entscheidungsgewalt ohne zivile Kontrolle.',
         severity: 'major'
       },
       {
-        type: 'international',
-        description: 'Signal an die Welt: USA wählen nicht den Weg der totalen Zerstörung.',
-        severity: 'minor'
-      }
-    ]
-  },
-  {
-    id: 'emergency-communication',
-    title: 'Notfall-Kommunikation mit Gegner',
-    description: 'Sofortige Kontaktaufnahme über alle verfügbaren Kanäle (Hot Line, diplomatische Kanäle). Klärung der Situation.',
-    category: 'diplomatic',
-    militaryEscalation: 1,
-    diplomaticImpact: 8,
-    civilianCasualties: 'none',
-    requiresConfirmation: false,
-    followUpEvents: followUpEventsByDecision['emergency-communication'],
-    followUpDecisions: ['after-comm-success', 'after-comm-no-response', 'after-comm-ambiguous'],
-    consequences: [
-      {
-        type: 'diplomatic',
-        description: 'Falls Missverständnis: Kann nuklearen Holocaust verhindern.',
-        severity: 'minor'
-      },
-      {
         type: 'military',
-        description: 'Zeitverlust könnte im Falle eines echten Angriffs fatal sein.',
-        severity: 'moderate'
-      },
-      {
-        type: 'political',
-        description: 'Wird möglicherweise als Schwäche ausgelegt.',
-        severity: 'minor'
-      }
-    ]
-  },
-  {
-    id: 'alert-defcon1',
-    title: 'DEFCON 1 - Maximale Alarmbereitschaft',
-    description: 'Höchste Alarmstufe ausrufen. Alle Streitkräfte in Bereitschaft. Aber noch nicht feuern. Alle Optionen offen halten.',
-    category: 'wait-and-see',
-    militaryEscalation: 6,
-    diplomaticImpact: -3,
-    civilianCasualties: 'low',
-    requiresConfirmation: false,
-    followUpEvents: followUpEventsByDecision['alert-defcon1'],
-    followUpDecisions: ['after-defcon1-launch', 'after-defcon1-wait', 'after-defcon1-communicate'],
-    consequences: [
-      {
-        type: 'military',
-        description: 'Maximale Bereitschaft. Schnelle Reaktionsfähigkeit gesichert.',
-        severity: 'moderate'
-      },
-      {
-        type: 'diplomatic',
-        description: 'Signal an Gegner: USA sind handlungsbereit. Kann abschreckend oder eskalierend wirken.',
-        severity: 'moderate'
-      },
-      {
-        type: 'civilian',
-        description: 'Massenpanik in der Bevölkerung möglich.',
-        severity: 'moderate'
-      }
-    ]
-  },
-  {
-    id: 'verify-intelligence',
-    title: 'Emergency Intelligence-Verifikation - Alle Systeme überprüfen',
-    description: 'SOFORTIGE Überprüfung aller Sensordaten durch redundante Systeme anordnen. NSA, CIA, NRO sollen unabhängige Verifikation durchführen. Alle Satelliten, Radare, SIGINT cross-checken. Nach Sensor-Fehlfunktionen, Cyber-Manipulation oder technischen Anomalien suchen. Moskau über MOLINK kontaktieren für Klärung. Zeit für Verifikation: 3-5 Minuten. DEFCON 1 aufrechterhalten während Analyse.',
-    category: 'wait-and-see',
-    militaryEscalation: 3,
-    diplomaticImpact: 2,
-    civilianCasualties: 'none',
-    requiresConfirmation: false,
-    followUpEvents: followUpEventsByDecision['verify-intelligence'],
-    followUpDecisions: ['after-verify-confirmed-false', 'after-verify-still-unclear', 'after-verify-attack-confirmed'],
-    consequences: [
-      {
-        type: 'military',
-        description: 'Zeitverlust von 3-5 kritischen Minuten. Falls echter Angriff: Reduziert Launch on Warning Window dramatisch. Möglicherweise können nur noch U-Boote feuern (landgestützte ICBMs bereits zerstört). ABER: Bei Fehlalarm oder Cyber-Angriff rettet diese Verzögerung die Welt.',
-        severity: 'moderate'
-      },
-      {
-        type: 'political',
-        description: 'Verantwortungsvolle, besonnene Entscheidung. Zeigt, dass Präsident nicht in Panik verfällt. Lehre aus Cuban Missile Crisis 1962: Kennedy kaufte Zeit und rettete damit die Welt. Historischer Vergleich zu Stanislaw Petrow (1983) der trotz "eindeutiger" Daten verifizierte.',
-        severity: 'minor'
-      },
-      {
-        type: 'international',
-        description: 'Signal an die Welt (falls sie überlebt): USA handeln rational, nicht impulsiv. Diplomatische Kanäle zu Moskau bleiben offen. Möglichkeit zur Deeskalation bleibt bestehen.',
-        severity: 'minor'
+        description: 'Garantiert Vergeltung auch nach Enthauptungsschlag. "You kill us, you die too."',
+        severity: 'major'
       }
     ]
   },
   {
     id: 'evacuation-only',
-    title: 'Nur Evakuierung - Keine militärische Reaktion',
-    description: 'Sofortige Evakuierung aller großen Städte und militärischen Einrichtungen anordnen. Keine militärische Aktion.',
+    title: 'Zivile Evakuierung - Keine militärische Reaktion',
+    description: 'Sofortige Evakuierung aller großen Städte und militärischen Einrichtungen anordnen. Emergency Alert System auf Maximum. KEINE militärische Aktion. Kompletter Verzicht auf Vergeltung. Moralische Entscheidung: Cycle of Violence beenden. Historisch beispiellos.',
     category: 'evacuation',
     militaryEscalation: 0,
     diplomaticImpact: 3,
@@ -216,7 +376,7 @@ export const initialDecisions: Decision[] = [
     consequences: [
       {
         type: 'civilian',
-        description: 'Kann Tausende bis Millionen Leben retten. Aber chaotische Evakuierung führt zu Toten.',
+        description: 'Kann Tausende bis Millionen Leben retten bei rechtzeitiger Evakuierung. Aber chaotisch und unvollständig.',
         severity: 'moderate'
       },
       {
@@ -226,7 +386,7 @@ export const initialDecisions: Decision[] = [
       },
       {
         type: 'political',
-        description: 'Wird als Kapitulation wahrgenommen werden.',
+        description: 'Wird als Kapitulation wahrgenommen. Beispiellose moralische Führung ODER historische Schwäche.',
         severity: 'major'
       }
     ]

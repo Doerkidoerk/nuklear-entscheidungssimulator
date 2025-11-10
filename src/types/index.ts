@@ -1,5 +1,5 @@
 // Szenario-Typen
-export type ScenarioType = 'real-attack' | 'false-alarm' | 'cyber-attack' | 'ambiguous'
+export type ScenarioType = 'real-attack' | 'false-alarm' | 'cyber-attack' | 'ambiguous' | 'decapitation'
 
 export interface Scenario {
   id: ScenarioType
@@ -107,7 +107,7 @@ export type DecisionCategory =
   | 'evacuation'
 
 export interface Consequence {
-  type: 'military' | 'diplomatic' | 'civilian' | 'political' | 'international'
+  type: 'military' | 'diplomatic' | 'civilian' | 'political' | 'international' | 'intelligence'
   description: string
   severity: 'minor' | 'moderate' | 'major' | 'catastrophic'
 }

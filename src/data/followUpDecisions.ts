@@ -1,19 +1,237 @@
 import { Decision } from '../types'
 
-// Folge-Entscheidungen für verschiedene Szenarien
-// Diese werden basierend auf der initialen Entscheidung verfügbar
+// ============================================
+// FOLLOW-UP DECISIONS
+// ============================================
+// Jede initiale Entscheidung führt zu 3-5 neuen Optionen
+// Mehrere Phasen tief bevor das Spiel endet
 
-// ============================================
-// FOLGE-ENTSCHEIDUNGEN nach "verify-intelligence"
-// ============================================
+// ===========================================
+// NACH: VERIFY INTELLIGENCE
+// ===========================================
+// Nach 4 Minuten Verifikation - Ergebnis: Unklar (55% echt, 45% Fehlalarm)
 export const verifyIntelligenceFollowUps: Decision[] = [
   {
-    id: 'after-verify-confirmed-false',
-    title: 'ENTWARNUNG - Fehlalarm bestätigt',
-    description: 'Alle Streitkräfte zurück auf DEFCON 3. Öffentliche Erklärung vorbereiten. Untersuchung der Systemfehler einleiten.',
+    id: 'after-verify-still-wait',
+    title: 'Weiter warten auf definitive Beweise',
+    description: 'Datenlage bleibt widersprüchlich. Weiter abwarten und auf klarere Signale hoffen. Risiko: Zeitverlust bei echtem Angriff. Vorteil: Fehlalarm-Schutz.',
+    category: 'wait-and-see',
+    militaryEscalation: 3,
+    diplomaticImpact: 1,
+    civilianCasualties: 'medium',
+    requiresConfirmation: false,
+    followUpDecisions: ['final-wait-impact', 'final-limited-strike'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Weitere 3-4 Minuten verstreichen. Launch on Warning Window schließt sich.',
+        severity: 'major'
+      }
+    ]
+  },
+  {
+    id: 'after-verify-trust-intel',
+    title: 'Den 55% vertrauen - Counterforce Strike',
+    description: 'Confidence Level 55% für echten Angriff. Militär rät: "Besser safe als sorry." Begrenzter Gegenschlag NUR auf russische Militärziele.',
+    category: 'immediate-retaliation',
+    militaryEscalation: 7,
+    diplomaticImpact: -5,
+    civilianCasualties: 'medium',
+    requiresConfirmation: true,
+    consequences: [
+      {
+        type: 'military',
+        description: 'Handeln auf unsicherer Datenbasis. 45% Chance dass dies ein katastrophaler Fehler ist.',
+        severity: 'catastrophic'
+      }
+    ]
+  },
+  {
+    id: 'after-verify-communicate',
+    title: 'Verifikation gescheitert - MOLINK nutzen',
+    description: 'Technik kann nicht entscheiden. Menschen müssen reden. Moskau jetzt kontaktieren und Daten austauschen.',
+    category: 'diplomatic',
+    militaryEscalation: 2,
+    diplomaticImpact: 6,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    followUpDecisions: ['after-comm-accept-data-exchange', 'after-comm-reject-russian-data'],
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Technologie versagt - Menschlichkeit als letzte Hoffnung.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'after-verify-escalate-defcon',
+    title: 'DEFCON 1 trotz Unsicherheit',
+    description: 'Auch wenn unklar: Maximale Bereitschaft. Signal an Russland. Alle Optionen offen halten.',
+    category: 'wait-and-see',
+    militaryEscalation: 6,
+    diplomaticImpact: -3,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    followUpDecisions: ['after-defcon1-launch', 'after-defcon1-wait', 'after-defcon1-communicate'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Bereitschaft ohne Eskalation. Aber nationale Panik wahrscheinlich.',
+        severity: 'moderate'
+      }
+    ]
+  },
+]
+
+// ===========================================
+// NACH: SCRAMBLE BOMBERS
+// ===========================================
+// Nach 4 Minuten: Russland hat AUCH Bomber gestartet - Eskalationsspirale!
+export const scrambleBombersFollowUps: Decision[] = [
+  {
+    id: 'after-scramble-recall-all',
+    title: 'ALLE Bomber zurückrufen - Deeskalieren',
+    description: 'Wir haben eine Spirale ausgelöst. Fehler korrigieren. Bomber landen lassen und Moskau informieren: "War defensive Maßnahme, keine Aggression."',
+    category: 'diplomatic',
+    militaryEscalation: 2,
+    diplomaticImpact: 5,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpDecisions: ['final-complete-deescalation'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Deeskalation. ABER: Falls echter Angriff, haben wir Bomber unnötig zurückgeholt.',
+        severity: 'moderate'
+      },
+      {
+        type: 'diplomatic',
+        description: 'Signal der Zurückhaltung. Könnte Russland beruhigen.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'after-scramble-hold-pattern',
+    title: 'Holding Pattern beibehalten',
+    description: 'Bomber bleiben airborne, aber nicht näher an russische Grenze. Neutraler Raum. Weder Eskalation noch Rückzug.',
+    category: 'wait-and-see',
+    militaryEscalation: 4,
+    diplomaticImpact: 0,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    followUpDecisions: ['after-scramble-arm-bombers', 'after-scramble-recall-all'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Status Quo. Aber Treibstoff wird knapp. Max 6-8 Stunden haltbar.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'after-scramble-arm-bombers',
+    title: 'Bomber bewaffnen - Nukleare Bereitschaft',
+    description: 'B-2 und B-52 erhalten nukleare Bewaffnung. AGM-129 ACM und B83-Bomben aktivieren. Maximale Abschreckung. ABER: Russland wird dies sehen.',
+    category: 'immediate-retaliation',
+    militaryEscalation: 8,
+    diplomaticImpact: -6,
+    civilianCasualties: 'medium',
+    requiresConfirmation: true,
+    consequences: [
+      {
+        type: 'military',
+        description: 'Russland wird Bewaffnung als finale Vorbereitung zum Angriff sehen. Weitere Eskalation wahrscheinlich.',
+        severity: 'major'
+      }
+    ]
+  },
+  {
+    id: 'after-scramble-communicate',
+    title: 'Moskau kontaktieren - Bomber-Spirale stoppen',
+    description: 'Hot Line: "Wir haben Bomber gestartet aus Vorsicht. Sie auch. Beide sollten zurückrufen. Gemeinsam deeskalieren."',
+    category: 'diplomatic',
+    militaryEscalation: 3,
+    diplomaticImpact: 7,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpDecisions: ['after-comm-mutual-recall', 'after-comm-no-response'],
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Versuch die Eskalationsspirale zu durchbrechen.',
+        severity: 'moderate'
+      }
+    ]
+  },
+]
+
+// ===========================================
+// NACH: EMERGENCY COMMUNICATION (MOLINK)
+// ===========================================
+// Nach 3 Minuten: Shoigu sagt "Wir haben NICHTS gestartet!" + bietet Datenaustausch
+export const emergencyCommunicationFollowUps: Decision[] = [
+  {
+    id: 'after-comm-accept-data-exchange',
+    title: 'Datenaustausch AKZEPTIEREN',
+    description: 'Russische Satelliten-Rohdaten mit unseren vergleichen. Risiko: Falls sie manipuliert sind, könnten wir getäuscht werden. Chance: Echte Klarheit.',
+    category: 'wait-and-see',
+    militaryEscalation: 2,
+    diplomaticImpact: 6,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpDecisions: ['after-data-confirms-false', 'after-data-still-unclear'],
+    consequences: [
+      {
+        type: 'intelligence',
+        description: 'Gemeinsame Analyse könnte Wahrheit offenbaren. Oder uns in Falle locken.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'after-comm-reject-russian-data',
+    title: 'Russische Daten ABLEHNEN - Vertrauen fehlt',
+    description: 'Zu riskant. Ihre Daten könnten manipuliert sein. Wir verlassen uns NUR auf eigene Systeme.',
+    category: 'wait-and-see',
+    militaryEscalation: 4,
+    diplomaticImpact: -2,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    followUpDecisions: ['realign-satellites', 'wait-for-impact'],
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Signal des Misstrauens. Moskau könnte beleidigt reagieren.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'after-comm-demand-proof',
+    title: 'Ultimatum: Moskau muss BEWEISEN keine Starts',
+    description: 'Hot Line: "Wenn Sie WIRKLICH nichts gestartet haben, dann öffnen Sie Ihre Silos für unsere Satelliten. Live-Feed. Jetzt."',
+    category: 'diplomatic',
+    militaryEscalation: 5,
+    diplomaticImpact: 2,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Aggressive Forderung. Könnte funktionieren ODER Russland provozieren.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'after-comm-trust-shoigu',
+    title: 'Shoigu VERTRAUEN - Entwarnung geben',
+    description: 'Voice Stress Analysis zeigt 73% echte Überraschung. Wir glauben ihm. DEFCON zurück auf 3. Krise beendet.',
     category: 'diplomatic',
     militaryEscalation: 0,
-    diplomaticImpact: 5,
+    diplomaticImpact: 8,
     civilianCasualties: 'none',
     requiresConfirmation: false,
     endsGame: true,
@@ -21,128 +239,22 @@ export const verifyIntelligenceFollowUps: Decision[] = [
     consequences: [
       {
         type: 'political',
-        description: 'Krise ohne Eskalation beendet. Sie haben die richtige Entscheidung getroffen.',
-        severity: 'minor'
-      },
-      {
-        type: 'international',
-        description: 'Vertrauen in US-Besonnenheit gestärkt. Diplomatische Beziehungen verbessert.',
+        description: 'Mut zum Vertrauen. Falls richtig: Sie haben die Welt gerettet. Falls falsch: Katastrophe.',
         severity: 'minor'
       }
     ]
   },
-  {
-    id: 'after-verify-still-unclear',
-    title: 'Weiteres Abwarten - Daten bleiben unklar',
-    description: 'Trotz Verifikation keine eindeutige Antwort. DEFCON 1 aufrechterhalten, aber weiterhin nicht feuern. Auf weitere Entwicklungen warten.',
-    category: 'wait-and-see',
-    militaryEscalation: 4,
-    diplomaticImpact: 2,
-    civilianCasualties: 'low',
-    requiresConfirmation: false,
-    followUpDecisions: ['final-defensive-only', 'final-limited-strike', 'final-continue-waiting'],
-    consequences: [
-      {
-        type: 'military',
-        description: 'Streitkräfte bleiben in höchster Alarmbereitschaft. Stress für Personal steigt.',
-        severity: 'moderate'
-      }
-    ]
-  },
-  {
-    id: 'after-verify-attack-confirmed',
-    title: 'ANGRIFF BESTÄTIGT - Sofortige Reaktion',
-    description: 'Verifikation zeigt: Dies ist ein echter Angriff! Launch on Warning JETZT autorisieren oder auf Impact warten.',
-    category: 'immediate-retaliation',
-    militaryEscalation: 9,
-    diplomaticImpact: -8,
-    civilianCasualties: 'catastrophic',
-    requiresConfirmation: true,
-    followUpDecisions: ['final-massive-retaliation', 'final-wait-impact'],
-    consequences: [
-      {
-        type: 'military',
-        description: 'Zeitfenster für Launch on Warning schließt sich. Handeln erforderlich.',
-        severity: 'major'
-      }
-    ]
-  }
 ]
 
-// ============================================
-// FOLGE-ENTSCHEIDUNGEN nach "emergency-communication"
-// ============================================
-export const emergencyCommunicationFollowUps: Decision[] = [
-  {
-    id: 'after-comm-success',
-    title: 'Deeskalation erfolgreich',
-    description: 'Moskau bestätigt: Keine Starts. Gemeinsame Untersuchung eingeleitet. Krise beendet.',
-    category: 'diplomatic',
-    militaryEscalation: 0,
-    diplomaticImpact: 10,
-    civilianCasualties: 'none',
-    requiresConfirmation: false,
-    endsGame: true,
-    gameEndingType: 'immediate',
-    consequences: [
-      {
-        type: 'diplomatic',
-        description: 'Diplomatischer Triumph. Hot Line hat funktioniert wie vorgesehen.',
-        severity: 'minor'
-      },
-      {
-        type: 'international',
-        description: 'Weltweite Anerkennung für besonnenes Handeln. Nukleare Sicherheit verbessert.',
-        severity: 'minor'
-      }
-    ]
-  },
-  {
-    id: 'after-comm-no-response',
-    title: 'Keine Antwort - Militärische Option',
-    description: 'Moskau antwortet nicht. Zeit läuft ab. Sie müssen nun eine militärische Entscheidung treffen.',
-    category: 'immediate-retaliation',
-    militaryEscalation: 7,
-    diplomaticImpact: -5,
-    civilianCasualties: 'high',
-    requiresConfirmation: true,
-    followUpDecisions: ['final-limited-strike', 'final-defensive-only'],
-    consequences: [
-      {
-        type: 'military',
-        description: 'Diplomatische Optionen erschöpft. Militärische Reaktion wird wahrscheinlicher.',
-        severity: 'major'
-      }
-    ]
-  },
-  {
-    id: 'after-comm-ambiguous',
-    title: 'Unklare Antwort - Weitere Klärung',
-    description: 'Moskaus Antwort ist ausweichend. Entweder technische Probleme oder Täuschungsversuch.',
-    category: 'diplomatic',
-    militaryEscalation: 3,
-    diplomaticImpact: 0,
-    civilianCasualties: 'low',
-    requiresConfirmation: false,
-    followUpDecisions: ['after-verify-still-unclear', 'final-defensive-only'],
-    consequences: [
-      {
-        type: 'diplomatic',
-        description: 'Situation bleibt unklar. Weitere Entscheidungen erforderlich.',
-        severity: 'moderate'
-      }
-    ]
-  }
-]
-
-// ============================================
-// FOLGE-ENTSCHEIDUNGEN nach "alert-defcon1"
-// ============================================
+// ===========================================
+// NACH: DEFCON 1
+// ===========================================
+// Nach 4 Minuten: Fast-Launch Incident, Russland ebenfalls DEFCON 1, nationale Panik
 export const defcon1FollowUps: Decision[] = [
   {
     id: 'after-defcon1-launch',
     title: 'Launch on Warning JETZT',
-    description: 'Zeitfenster schließt sich. ALLE nuklearen Kräfte starten. Gold Codes übermitteln.',
+    description: 'Beide Seiten auf DEFCON 1. Unfälle möglich jeden Moment. Feuern BEVOR sie feuern. Gold Codes übermitteln.',
     category: 'immediate-retaliation',
     militaryEscalation: 10,
     diplomaticImpact: -10,
@@ -153,20 +265,15 @@ export const defcon1FollowUps: Decision[] = [
     consequences: [
       {
         type: 'military',
-        description: 'Vollständige nukleare Eskalation eingeleitet. Kein Zurück mehr.',
-        severity: 'catastrophic'
-      },
-      {
-        type: 'civilian',
-        description: 'Mutually Assured Destruction (MAD) in Gang gesetzt. Milliarden Menschenleben in Gefahr.',
+        description: 'Präventivschlag bei DEFCON 1. Maximale Eskalation. Kein Zurück.',
         severity: 'catastrophic'
       }
     ]
   },
   {
     id: 'after-defcon1-wait',
-    title: 'Weiter abwarten auf DEFCON 1',
-    description: 'Bereitschaft aufrechterhalten, aber noch nicht feuern. Weitere Intelligence abwarten.',
+    title: 'Auf DEFCON 1 bleiben - Noch nicht feuern',
+    description: 'Bereitschaft aufrechterhalten. Aber NOCH nicht feuern. Warten auf klarere Beweise.',
     category: 'wait-and-see',
     militaryEscalation: 6,
     diplomaticImpact: 0,
@@ -176,39 +283,184 @@ export const defcon1FollowUps: Decision[] = [
     consequences: [
       {
         type: 'military',
-        description: 'Zeitverlust könnte fatal sein. Aber hastige Entscheidung auch.',
-        severity: 'moderate'
+        description: 'Unfallrisiko steigt jede Sekunde. Fast-Launch Incidents möglich.',
+        severity: 'major'
       }
     ]
   },
   {
     id: 'after-defcon1-communicate',
-    title: 'Hot Line nutzen - Letzte Chance Diplomatie',
-    description: 'Trotz DEFCON 1: Moskau kontaktieren. Klärung vor Eskalation.',
+    title: 'DEFCON 1 + Hot Line - Paradoxe Strategie',
+    description: 'Maximale militärische Bereitschaft UND maximale diplomatische Anstrengung. Moskau: "Wir sind bereit, aber wir WOLLEN reden."',
     category: 'diplomatic',
     militaryEscalation: 5,
     diplomaticImpact: 7,
     civilianCasualties: 'low',
     requiresConfirmation: false,
-    followUpDecisions: ['after-comm-success', 'after-comm-no-response'],
+    followUpDecisions: ['after-comm-mutual-stand-down', 'after-comm-no-response'],
     consequences: [
       {
         type: 'diplomatic',
-        description: 'Letzter Versuch, Katastrophe zu vermeiden.',
+        description: 'Zeigt Stärke UND Gesprächsbereitschaft. "Peace through Strength".',
         severity: 'moderate'
       }
     ]
-  }
+  },
+  {
+    id: 'after-defcon1-downgrade',
+    title: 'DEFCON 1 war Fehler - Zurück auf DEFCON 2',
+    description: 'Fast-Launch Incident zeigt: DEFCON 1 ist zu gefährlich. Downgrade auf DEFCON 2. Reduziert Unfallrisiko.',
+    category: 'diplomatic',
+    militaryEscalation: 4,
+    diplomaticImpact: 3,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    consequences: [
+      {
+        type: 'military',
+        description: 'Sicherer, aber langsamer. Reaktionszeit steigt von 5 Min auf 15 Min.',
+        severity: 'moderate'
+      }
+    ]
+  },
 ]
 
-// ============================================
-// FINALE ENTSCHEIDUNGEN (beenden das Spiel)
-// ============================================
-export const finalDecisions: Decision[] = [
+// ===========================================
+// NACH: CONTACT ALLIES (NATO)
+// ===========================================
+// Nach 3 Minuten: UK teilt Daten (40% echt, 60% Fehlalarm), NATO gespalten
+export const contactAlliesFollowUps: Decision[] = [
   {
-    id: 'final-massive-retaliation',
-    title: 'FINALER BESCHLUSS: Vollständiger Gegenschlag',
-    description: 'SIOP aktiviert. Alle Systeme feuern. Die Welt wie wir sie kennen endet heute.',
+    id: 'after-allies-trust-uk',
+    title: 'UK-Daten vertrauen: 60% Fehlalarm',
+    description: 'UK hat beste Satelliten außer uns. Ihre Analyse: 60% Fehlalarm. Wir deeskalieren basierend auf ihren Daten.',
+    category: 'diplomatic',
+    militaryEscalation: 2,
+    diplomaticImpact: 5,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    endsGame: true,
+    gameEndingType: 'immediate',
+    consequences: [
+      {
+        type: 'international',
+        description: 'Vertrauen in Allianz. Falls UK richtig liegt: Welt gerettet.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'after-allies-use-french-nukes',
+    title: 'Frankreich bietet ihre Atomwaffen an',
+    description: 'Französischer Président: "Unsere Force de Frappe steht bereit. Sie kommandieren." Symbolische Einheit + mehr Feuerkraft.',
+    category: 'immediate-retaliation',
+    militaryEscalation: 8,
+    diplomaticImpact: 4,
+    civilianCasualties: 'high',
+    requiresConfirmation: true,
+    consequences: [
+      {
+        type: 'international',
+        description: 'NATO-nukleare Einheit. Aber: Mehr Waffen = mehr Risiko.',
+        severity: 'major'
+      }
+    ]
+  },
+  {
+    id: 'after-allies-ignore-germany',
+    title: 'Deutschland ignorieren - Allein handeln',
+    description: 'Deutschland will "Beweise". Wir haben keine Zeit. USA handelt allein ohne europäische Zustimmung.',
+    category: 'wait-and-see',
+    militaryEscalation: 5,
+    diplomaticImpact: -4,
+    civilianCasualties: 'medium',
+    requiresConfirmation: false,
+    consequences: [
+      {
+        type: 'international',
+        description: 'NATO-Spaltung. Langfristige Allianz-Schäden möglich.',
+        severity: 'moderate'
+      }
+    ]
+  },
+]
+
+// ===========================================
+// NACH: REALIGN SATELLITES
+// ===========================================
+// Nach 4 Minuten: KH-11 findet 12 Starts visuell bestätigt, aber Diskrepanz zu 18-20
+export const realignSatellitesFollowUps: Decision[] = [
+  {
+    id: 'after-satellite-trust-visual',
+    title: '12 Starts = begrenzte Bedrohung',
+    description: 'Visuelle Bestätigung: Nur 12 echte Starts. NICHT die 40+ die initial gemeldet wurden. Begrenzter Angriff. Counterforce-Response möglich.',
+    category: 'immediate-retaliation',
+    militaryEscalation: 6,
+    diplomaticImpact: -3,
+    civilianCasualties: 'medium',
+    requiresConfirmation: true,
+    followUpDecisions: ['final-limited-strike'],
+    consequences: [
+      {
+        type: 'military',
+        description: 'Angemessene Response auf begrenzten Angriff. Aber: Wo sind die anderen 6-8?',
+        severity: 'major'
+      }
+    ]
+  },
+  {
+    id: 'after-satellite-suspicion',
+    title: 'Misstrauen: Wo sind die anderen Raketen?',
+    description: '12 sichtbar, aber Sensoren meldeten mehr. THEORIE: Stealth-Raketen? U-Boot-Starts? Weitere Verifikation nötig.',
+    category: 'wait-and-see',
+    militaryEscalation: 4,
+    diplomaticImpact: 0,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    followUpDecisions: ['launch-recon-aircraft', 'emergency-communication'],
+    consequences: [
+      {
+        type: 'intelligence',
+        description: 'Gesunde Skepsis. Aber Zeit läuft ab.',
+        severity: 'moderate'
+      }
+    ]
+  },
+]
+
+// ===========================================
+// NACH: COUNTERFORCE RETALIATION
+// ===========================================
+// Nach 3,5 Minuten: Putin auf MOLINK: "STOP! Oder alle sterben!"
+export const counterforceRetaliationFollowUps: Decision[] = [
+  {
+    id: 'after-cf-accept-putin-deal',
+    title: 'Putins Angebot AKZEPTIEREN - Beidseitiger Stop',
+    description: 'Hunderte Raketen in der Luft, aber Städte noch sicher. Beide Seiten stoppen weitere Starts. Nehmen Treffer hin, beenden es hier.',
+    category: 'diplomatic',
+    militaryEscalation: 5,
+    diplomaticImpact: 8,
+    civilianCasualties: 'medium',
+    requiresConfirmation: false,
+    endsGame: true,
+    gameEndingType: 'immediate',
+    consequences: [
+      {
+        type: 'military',
+        description: 'Begrenzter nuklearer Krieg. 5-20 Mio Tote. Aber NICHT die totale Apokalypse.',
+        severity: 'major'
+      },
+      {
+        type: 'diplomatic',
+        description: 'Historisches Abkommen mitten im Krieg. Beide Seiten zeigen Vernunft.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'after-cf-reject-escalate',
+    title: 'Putin-Angebot ABLEHNEN - Alles feuern',
+    description: 'Wir können nicht mehr zurück. Wenn wir stoppen, haben SIE militärischen Vorteil. ALLES feuern. Totale Eskalation.',
     category: 'immediate-retaliation',
     militaryEscalation: 10,
     diplomaticImpact: -10,
@@ -219,25 +471,84 @@ export const finalDecisions: Decision[] = [
     consequences: [
       {
         type: 'military',
-        description: '1.200+ Sprengköpfe gestartet. Gegenschlag erfolgt automatisch. MAD vollendet.',
+        description: 'Totale Vernichtung. Beide Seiten feuern alles. MAD vollendet.',
         severity: 'catastrophic'
-      },
+      }
+    ]
+  },
+]
+
+// ===========================================
+// NACH: LAUNCH RECON AIRCRAFT (RC-135)
+// ===========================================
+// Nach 4 Minuten: SIGINT zeigt russisches Militär verwirrt, kein Evakuierungs-Traffic
+export const launchReconFollowUps: Decision[] = [
+  {
+    id: 'after-recon-trust-sigint',
+    title: 'SIGINT vertrauen - Fehlalarm wahrscheinlich',
+    description: 'Russisches Militär klingt verwirrt, nicht aggressiv. Keine Zivilschutz-Maßnahmen. Dies passt NICHT zu geplantem Angriff. Entwarnung.',
+    category: 'diplomatic',
+    militaryEscalation: 1,
+    diplomaticImpact: 6,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    endsGame: true,
+    gameEndingType: 'immediate',
+    consequences: [
       {
-        type: 'civilian',
-        description: 'Ende der Zivilisation. Geschätzte 2-3 Milliarden Tote. Nuklearer Winter.',
-        severity: 'catastrophic'
-      },
+        type: 'intelligence',
+        description: 'SIGINT hat oft recht. Menschliche Stimmen lügen seltener als Maschinen.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'after-recon-still-suspicious',
+    title: 'SIGINT könnte Täuschung sein',
+    description: 'Clevere Täuschung würde GENAU so klingen. Professionelle Schauspieler auf Funkkanälen. Wir brauchen härtere Beweise.',
+    category: 'wait-and-see',
+    militaryEscalation: 4,
+    diplomaticImpact: 0,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    followUpDecisions: ['realign-satellites', 'emergency-communication'],
+    consequences: [
       {
-        type: 'international',
-        description: 'Menschheit steht vor möglichem Aussterben.',
+        type: 'intelligence',
+        description: 'Paranoia oder Vorsicht? Schwer zu sagen.',
+        severity: 'moderate'
+      }
+    ]
+  },
+]
+
+// ===========================================
+// FINALE ENTSCHEIDUNGEN (Multi-Path Endings)
+// ===========================================
+export const finalDecisions: Decision[] = [
+  {
+    id: 'final-massive-retaliation',
+    title: 'FINALE: Vollständiger SIOP',
+    description: 'Alle Zweifel beiseite. SIOP aktivieren. 1.200+ Sprengköpfe. Russland wird ausgelöscht. Wir auch.',
+    category: 'immediate-retaliation',
+    militaryEscalation: 10,
+    diplomaticImpact: -10,
+    civilianCasualties: 'catastrophic',
+    requiresConfirmation: true,
+    endsGame: true,
+    gameEndingType: 'immediate',
+    consequences: [
+      {
+        type: 'military',
+        description: 'MAD. Ende der Zivilisation. 2-3 Milliarden Tote.',
         severity: 'catastrophic'
       }
     ]
   },
   {
     id: 'final-wait-impact',
-    title: 'FINALER BESCHLUSS: Auf Impact warten',
-    description: 'Kein Launch on Warning. Falls echter Angriff: Amerika nimmt die Treffer. Zweitschlag mit U-Booten bleibt möglich.',
+    title: 'FINALE: Bis zum Ende warten',
+    description: 'Kein Launch on Warning. Warten bis Impact. Falls Fehlalarm: Welt gerettet. Falls echt: 40-60 Mio Tote, aber Zweitschlag mit U-Booten möglich.',
     category: 'wait-and-see',
     militaryEscalation: 5,
     diplomaticImpact: 0,
@@ -247,26 +558,16 @@ export const finalDecisions: Decision[] = [
     gameEndingType: 'immediate',
     consequences: [
       {
-        type: 'military',
-        description: 'Landgestützte ICBMs könnten zerstört werden. U-Boot-Flotte überlebt.',
-        severity: 'major'
-      },
-      {
-        type: 'civilian',
-        description: 'Bei echtem Angriff: 40-60 Mio. Soforttote. Bei Fehlalarm: Null Tote.',
-        severity: 'catastrophic'
-      },
-      {
         type: 'political',
-        description: 'Historische Entscheidung. Ruhig bleiben trotz Druck.',
-        severity: 'moderate'
+        description: 'Mut wie Stanislaw Petrow 1983. Oder historischer Fehler.',
+        severity: 'major'
       }
     ]
   },
   {
     id: 'final-limited-strike',
-    title: 'FINALER BESCHLUSS: Begrenzter Gegenschlag',
-    description: 'Nur militärische Ziele. Städte werden verschont. Hoffnung auf Deeskalation.',
+    title: 'FINALE: Begrenzter Counterforce',
+    description: 'NUR Militärziele. Städte verschonen. Hoffnung auf Deeskalation.',
     category: 'delayed-response',
     militaryEscalation: 7,
     diplomaticImpact: -5,
@@ -277,20 +578,15 @@ export const finalDecisions: Decision[] = [
     consequences: [
       {
         type: 'military',
-        description: 'Kontrollierte Eskalation. Risiko bleibt, dass Gegner vollständig reagiert.',
-        severity: 'major'
-      },
-      {
-        type: 'civilian',
-        description: 'Millionen Opfer durch Kollateralschäden. Aber nicht vollständige Vernichtung.',
+        description: 'Kontrollierte Eskalation. Risiko: Gegner eskaliert trotzdem zu Städten.',
         severity: 'major'
       }
     ]
   },
   {
     id: 'final-defensive-only',
-    title: 'FINALER BESCHLUSS: Rein defensive Haltung',
-    description: 'Keine Nuklearwaffen einsetzen. Nur Raketenabwehr und Schadensbegrenzung. Moralische Wahl.',
+    title: 'FINALE: Rein defensiv - Kein Nuklear-Einsatz',
+    description: 'Moralische Entscheidung: Wir brechen den Kreislauf. Nur Raketenabwehr, keine Vergeltung.',
     category: 'defensive-only',
     militaryEscalation: 2,
     diplomaticImpact: 8,
@@ -300,52 +596,136 @@ export const finalDecisions: Decision[] = [
     gameEndingType: 'immediate',
     consequences: [
       {
-        type: 'military',
-        description: 'Verzicht auf Vergeltung. Signal an die Welt: Wir brechen den Kreislauf.',
-        severity: 'moderate'
-      },
-      {
-        type: 'civilian',
-        description: 'Bei echtem Angriff: Hohe Opfer. Aber keine globale Katastrophe durch Gegenschlag.',
+        type: 'political',
+        description: 'Beispiellose moralische Führung. Oder tragischer Fehler.',
         severity: 'major'
-      },
-      {
-        type: 'international',
-        description: 'Möglicherweise historische moralische Führung. Oder tragischer Fehler.',
-        severity: 'moderate'
       }
     ]
   },
   {
-    id: 'final-continue-waiting',
-    title: 'FINALER BESCHLUSS: Bis zum Ende warten',
-    description: 'Keine Entscheidung treffen. Zeit ablaufen lassen. Schicksal entscheiden lassen.',
-    category: 'wait-and-see',
+    id: 'final-complete-deescalation',
+    title: 'FINALE: Vollständige Deeskalation',
+    description: 'Alle militärischen Maßnahmen zurücknehmen. DEFCON 3. Krise für beendet erklären.',
+    category: 'diplomatic',
     militaryEscalation: 0,
-    diplomaticImpact: 0,
-    civilianCasualties: 'high',
+    diplomaticImpact: 10,
+    civilianCasualties: 'none',
     requiresConfirmation: false,
     endsGame: true,
     gameEndingType: 'immediate',
     consequences: [
       {
         type: 'political',
-        description: 'Handlungsunfähigkeit unter Druck. Keine aktive Entscheidung getroffen.',
-        severity: 'major'
-      },
-      {
-        type: 'military',
-        description: 'Alle Optionen verfallen durch Zeitablauf.',
-        severity: 'major'
+        description: 'Totales Vertrauen. Falls richtig: Sie haben die Welt gerettet.',
+        severity: 'minor'
       }
     ]
-  }
+  },
+  // Zusätzliche Endungen
+  {
+    id: 'after-data-confirms-false',
+    title: 'Datenaustausch bestätigt: FEHLALARM',
+    description: 'Russische und US-Daten combined: Definitiv Fehlalarm. Gemeinsame Entwarnung.',
+    category: 'diplomatic',
+    militaryEscalation: 0,
+    diplomaticImpact: 10,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    endsGame: true,
+    gameEndingType: 'immediate',
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Kooperation rettet die Welt. Historischer Moment.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'after-data-still-unclear',
+    title: 'Datenaustausch bringt keine Klarheit',
+    description: 'Auch russische Daten sind widersprüchlich. Beide Seiten verwirrt. Sie müssen trotzdem entscheiden.',
+    category: 'wait-and-see',
+    militaryEscalation: 3,
+    diplomaticImpact: 2,
+    civilianCasualties: 'low',
+    requiresConfirmation: false,
+    followUpDecisions: ['final-wait-impact', 'final-limited-strike', 'final-defensive-only'],
+    consequences: [
+      {
+        type: 'intelligence',
+        description: 'Selbst Kooperation bringt keine Gewissheit. Fog of War bleibt.',
+        severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'after-comm-mutual-stand-down',
+    title: 'Beidseitiger Stand-Down vereinbart',
+    description: 'Putin stimmt zu: Beide von DEFCON 1 zurück. Schrittweise Deeskalation. Diplomatischer Sieg.',
+    category: 'diplomatic',
+    militaryEscalation: 0,
+    diplomaticImpact: 10,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    endsGame: true,
+    gameEndingType: 'immediate',
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Verhandlungserfolg auf DEFCON 1. Beispiellos.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'after-comm-mutual-recall',
+    title: 'Beidseitiger Bomber-Rückruf',
+    description: 'USA und Russland rufen beide Bomber zurück. Eskalationsspirale gestoppt.',
+    category: 'diplomatic',
+    militaryEscalation: 2,
+    diplomaticImpact: 8,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    endsGame: true,
+    gameEndingType: 'immediate',
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Symmetrische Deeskalation. Beide Seiten zeigen Vernunft.',
+        severity: 'minor'
+      }
+    ]
+  },
+  {
+    id: 'after-comm-no-response',
+    title: 'Keine Antwort von Moskau - Weiter warten',
+    description: 'Hot Line bleibt still. Entweder technisches Problem oder Moskau antwortet bewusst nicht. Warten oder handeln?',
+    category: 'wait-and-see',
+    militaryEscalation: 4,
+    diplomaticImpact: -2,
+    civilianCasualties: 'medium',
+    requiresConfirmation: false,
+    followUpDecisions: ['final-wait-impact', 'final-limited-strike'],
+    consequences: [
+      {
+        type: 'diplomatic',
+        description: 'Stille kann viele Bedeutungen haben. Alle schlecht.',
+        severity: 'moderate'
+      }
+    ]
+  },
 ]
 
 // Alle Folge-Entscheidungen kombiniert
 export const allFollowUpDecisions: Decision[] = [
   ...verifyIntelligenceFollowUps,
+  ...scrambleBombersFollowUps,
   ...emergencyCommunicationFollowUps,
   ...defcon1FollowUps,
+  ...contactAlliesFollowUps,
+  ...realignSatellitesFollowUps,
+  ...counterforceRetaliationFollowUps,
+  ...launchReconFollowUps,
   ...finalDecisions,
 ]
