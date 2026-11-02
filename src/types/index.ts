@@ -162,7 +162,7 @@ export interface DecisionHistoryEntry {
 // ============================================
 
 // Was tatsächlich passiert - dem Spieler bis zum Debriefing unbekannt
-export type TruthKind = 'counterforce' | 'decapitation' | 'sensor-fault' | 'cyber-deception'
+export type TruthKind = 'counterforce' | 'decapitation' | 'sensor-fault' | 'cyber-deception' | 'ambiguous-test'
 
 export interface ScenarioTruth {
   kind: TruthKind
@@ -171,6 +171,7 @@ export interface ScenarioTruth {
   initialEscalation: number
   initialDeterrence: number
   escalationSensitivity: number // Wie nervös reagiert die Gegenseite auf unsere Alarmierung?
+  clarityCap?: number // Obergrenze des Lagebilds - manche Lagen klären sich nie vollständig
   whatReallyHappened: string
 }
 
@@ -220,6 +221,8 @@ export interface WorldState {
   postureClarity?: number
   thresholdsFired: string[]
   endReason?: 'decision' | 'timeout' | 'spiral'
+  advisorTrust: Record<string, number> // 0-100 je Berater
+  advisorsBroken: string[] // Berater, mit denen es zum Bruch kam
 }
 
 export interface OutcomeScores {
@@ -283,4 +286,5 @@ export interface DebriefingData {
   finalClarity: number
   finalDeterrence: number
   endTime: number
+  cabinet: { id: string; name: string; title: string; trust: number; broken: boolean }[]
 }

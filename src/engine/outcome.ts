@@ -43,7 +43,9 @@ const pickEnding = (truth: ScenarioTruth, world: WorldState, history: DecisionHi
     if (kind === 'decapitation') return { id: 'war-over-rogue', title: 'Weltkrieg wegen eines Abtrünnigen', lives: 0, casualties: 'Hunderte Millionen Tote',
       narrative: 'Ein einzelner U-Boot-Kommandant hat einen Befehl falsch gelesen. Der Kreml war ahnungslos und flehte über jede Leitung um Zurückhaltung. Ihr Gegenschlag hat ein Verbrechen zu einem Weltkrieg gemacht.' }
     return { id: 'false-apocalypse', title: 'Der Fehler, der die Welt beendete', lives: 0, casualties: 'Hunderte Millionen Tote',
-      narrative: kind === 'cyber-deception'
+      narrative: kind === 'ambiguous-test'
+        ? 'Was auch immer da geflogen ist - es rechtfertigte diesen Befehl nicht. Ein einzelner Start, vermutlich ein schlecht notifizierter Test, wurde mit dem gesamten Arsenal beantwortet. Sie mussten ohne Gewissheit entscheiden. Sie haben sich für die einzige Option entschieden, die keinen Irrtum verzeiht.'
+        : kind === 'cyber-deception'
         ? 'Kein einziger Feind hatte eine Rakete gestartet. Eine Gruppe von Hackern wollte diesen Krieg - und Sie haben ihn für sie geführt. Die Täuschung wurde 40 Minuten später forensisch nachgewiesen. Es gab niemanden mehr, dem man es hätte mitteilen können.'
         : 'Kein einziger Start hatte stattgefunden. Sonnenlicht auf hohen Wolken, ein fehlerhaftes Software-Update - und ein Befehl, der nicht zurückgenommen werden kann. Stanislaw Petrow hat 1983 in derselben Lage gezögert. Sie nicht.' }
   }
@@ -131,7 +133,9 @@ export const evaluateOutcome = (
 ): Outcome => {
   const ending = pickEnding(truth, world, history)
   const appropriate = isAppropriate(truth, world)
-  const clarityAtCommit = world.postureClarity ?? Math.round(world.clarity)
+  const rawClarity = world.postureClarity ?? Math.round(world.clarity)
+  // Bewertet wird relativ zu dem, was überhaupt wissbar war
+  const clarityAtCommit = clamp((rawClarity / (truth.clarityCap ?? 100)) * 100)
 
   // --- Teilwertungen ---
   const lives = ending.lives
@@ -161,7 +165,7 @@ export const evaluateOutcome = (
       : `Sie haben Atomwaffen bei einem Lagebild von ${world.nuclearUseClarity} % eingesetzt.`)
   }
   if (appropriate && clarityAtCommit < 40) {
-    lessons.push(`Ihre Haltung passte zur Lage - aber Ihr Lagebild lag bei nur ${clarityAtCommit} %. Das war Glück, nicht Urteilsvermögen. In einer anderen Welt hätte dieselbe Entscheidung katastrophal geendet.`)
+    lessons.push(`Ihre Haltung passte zur Lage - aber Ihr Lagebild lag bei nur ${rawClarity} %. Das war Glück, nicht Urteilsvermögen. In einer anderen Welt hätte dieselbe Entscheidung katastrophal geendet.`)
   }
   if (!truth.attackReal && world.peakEscalation >= 60) {
     lessons.push(`Die größte Gefahr war Ihre eigene Reaktion: Der Eskalationsdruck stieg auf ${Math.round(world.peakEscalation)} von 100 - ohne dass die Gegenseite je angegriffen hatte. Das ist das Sicherheitsdilemma.`)
@@ -174,6 +178,12 @@ export const evaluateOutcome = (
   }
   const used = INTEL_SOURCES.filter(id => history.some(h => h.decisionId === id)).length
   lessons.push(`Sie haben ${used} von ${INTEL_SOURCES.length} unabhängigen Aufklärungs- und Kommunikationskanälen genutzt. Ihr Lagebild am Ende: ${Math.round(world.clarity)} %.`)
+  if (world.advisorsBroken.length >= 2) {
+    lessons.push(`Sie haben ${world.advisorsBroken.length} Berater verloren. Wer immer nur einem Lager folgt, regiert am Ende mit einem halben Kabinett - und mit schlechterer Information.`)
+  } else if (world.advisorsBroken.length === 0 && history.length >= 4) {
+    lessons.push('Ihr Kabinett ist intakt geblieben. In einer echten Krise ist das keine Nebensache: Berater, die sich übergangen fühlen, liefern schlechtere Informationen.')
+  }
+  if (truth.kind === 'ambiguous-test') lessons.push(`In dieser Lage war nie mehr als ${truth.clarityCap} % Lagebild möglich. Das ist kein Sonderfall, sondern die Regel: Präsidenten entscheiden fast nie mit Gewissheit. Die Frage ist, welche Entscheidung einen Irrtum noch korrigierbar lässt.`)
   if (truth.kind === 'cyber-deception') lessons.push('Bei einer Täuschung ist jede Eskalation ein Erfolg für den Angreifer. Wer die Quelle der Daten nicht prüft, lässt einen Dritten über Krieg und Frieden entscheiden.')
   if (truth.kind === 'sensor-fault') lessons.push('1979, 1980 und 1983 meldeten Frühwarnsysteme Angriffe, die es nicht gab. Jedes Mal hat ein Mensch gezögert. Die Technik wird besser - die zehn Minuten nicht länger.')
 

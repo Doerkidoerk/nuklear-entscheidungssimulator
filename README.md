@@ -8,11 +8,12 @@ Dieses Projekt simuliert die Perspektive eines US-Präsidenten, der innerhalb vo
 
 ### Hauptmerkmale
 
-- **4 realistische Szenarien**:
-  - Echter Angriff
+- **5 realistische Szenarien**:
+  - Counterforce-Angriff (Entwaffnungsschlag)
+  - Enthauptungsschlag durch ein abtrünniges U-Boot
   - Fehlalarm (basierend auf historischen Vorfällen)
   - Cyber-Angriff auf Frühwarnsysteme
-  - Mehrdeutige Situation mit widersprüchlichen Daten
+  - Nebel: ein einzelner, nicht gemeldeter Start - die Lage klärt sich nie vollständig
 
 - **Echtzeit-Countdown**: 10 Minuten unter extremem Zeitdruck
 - **Dynamisches Event-System**: Zeitgesteuerte Nachrichten von verschiedenen Quellen
@@ -41,6 +42,29 @@ Folgeentscheidungen werden erst freigeschaltet, wenn der zugehörige Lagebericht
 und die "stehenden Optionen" (inklusive des nuklearen Knopfs) bleiben jederzeit verfügbar.
 Optionen, die eine Tatsache voraussetzen (z. B. "Datenaustausch bestätigt: Fehlalarm"), erscheinen nur, wenn die Welt sie hergibt.
 
+### Kabinett und Vertrauen
+Jeder Befehl gibt einem Lager recht und brüskiert ein anderes. Das Vertrauen jedes Beraters in Ihre Führung
+ist im Berater-Panel sichtbar. Fällt es unter 50, geht der Berater auf Distanz; unter 35 kommt es zum Bruch, mit Folgen:
+
+| Berater | Folge bei Bruch |
+|---|---|
+| Verteidigungsminister | Leak an die Presse - Eskalationsdruck steigt |
+| STRATCOM-Kommandeur | Militärische Deeskalation (Rückruf, DEFCON-Rückstufung) wirkt nur halb |
+| Außenministerin | Rücktritt - Diplomatie und heißer Draht wirken schwächer |
+| CIA-Direktor | Lageberichte schärfen das Lagebild deutlich weniger |
+| Sicherheitsberater | Lagebild wächst nur halb so schnell von selbst |
+| Vorsitzende der Joint Chiefs | Bereitschaftsbefehle stärken die Vergeltungsfähigkeit nur halb |
+| Stabschefin | Widersprüchliche Kommunikation - Eskalationsdruck steigt |
+
+### Lagekarte
+Die Sensorlage zeigt eine polare Karte (Nordpol im Zentrum, wie bei NORAD) mit gemeldeten Flugbahnen auf
+Großkreisen, Fortschritt in Echtzeit, Einschlägen und eigenen Bombern in Warteschleife. Sie zeigt, was die
+Sensoren melden, nicht, was wirklich geschieht. Auch Fehlalarm und Täuschung erzeugen dort Flugbahnen.
+
+### Nebel
+Im Szenario "Nebel" kann das Lagebild nie über 55 % steigen. Bewertet wird das Urteilsvermögen relativ zu dem,
+was überhaupt wissbar war.
+
 ### Auswertung
 Am Ende wird ermittelt, was Ihre Befehle **in dieser Welt** bewirkt haben (über 20 verschiedene Ausgänge), bewertet in vier Dimensionen:
 - **Menschenleben**
@@ -55,6 +79,7 @@ src/engine/
 ├── effects.ts     # Wirkung jedes Befehls + Prämissen für Optionen
 ├── clues.ts       # Wahrheitsabhängige Lageberichte
 ├── reactions.ts   # Berater reagieren auf Ihre Befehle
+├── advisorTrust.ts # Vertrauen im Kabinett und Folgen eines Bruchs
 ├── simulation.ts  # Reiner Simulationskern (tick / applyDecision)
 └── outcome.ts     # Ausgänge, Bewertung, persönliche Erkenntnisse
 ```

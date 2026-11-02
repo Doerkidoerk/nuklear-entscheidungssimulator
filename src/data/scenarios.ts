@@ -27,6 +27,8 @@ const icbmTargets = {
   seattle: { lat: 47.6062, lng: -122.3321, name: 'Seattle' },
   sanFrancisco: { lat: 37.7749, lng: -122.4194, name: 'San Francisco' },
   sohae: { lat: 39.66, lng: 124.705, name: 'Sohae (Nordkorea)' },
+  elmendorf: { lat: 61.25, lng: -149.8, name: 'Elmendorf AFB (Alaska)' },
+  anchorage: { lat: 61.2181, lng: -149.9003, name: 'Anchorage' },
 }
 
 // ===========================================
@@ -386,6 +388,63 @@ const cyberTrajectories: ICBMTrajectory[] = [
   { id: 'cy-t6', origin: icbmTargets.plesetsk, target: icbmTargets.stratcom, launchTime: 0, impactTime: 1770, status: 'mid-flight', type: 'ICBM' },
 ]
 
+// ===========================================
+// SZENARIO 5: NEBEL - Wenn Klarheit nie kommt
+// ===========================================
+// Ein echter Start, aber kein klares Muster. Jede Information lässt zwei Lesarten zu.
+// Das Lagebild kann in diesem Szenario nie über 55 % steigen.
+const ambiguousEvents: SimulationEvent[] = [
+  { id: 'amb-0', timestamp: -10, type: 'system-alert', priority: 'low', source: 'White House',
+    title: 'Camp David - 03:40 Uhr',
+    content: 'Mr. President, Sie wurden geweckt. Der diensthabende Offizier bittet Sie in den Bunker unter Camp David. Der Football-Träger ist bei Ihnen. Lage seit Mitternacht: ruhig. Russland hält seit drei Tagen ein Manöver der Nordflotte ab.',
+    updatesThreatLevel: 'low' },
+  { id: 'amb-1', timestamp: 0, type: 'satellite-data', priority: 'high', source: 'NORAD',
+    title: 'SBIRS: Einzelner Start bei Plesetsk',
+    content: 'Eine Infrarot-Signatur, Plesetsk. Klassifizierung: schwere Interkontinentalrakete, vermutlich RS-28 Sarmat. Im Nuclear Risk Reduction Center liegt KEINE Startnotifikation vor. Ein einzelner Start ist kein Angriffsmuster - aber auch kein Routinevorgang.',
+    updatesThreatLevel: 'elevated' },
+  { id: 'amb-2', timestamp: 30, type: 'radar-detection', priority: 'critical', source: 'Early Warning System',
+    title: 'Thule: Berechneter Kurs auf Alaska',
+    content: 'PAVE PAWS Thule: Objekt im Steigflug, berechnetes Ziel Elmendorf AFB / Anchorage. ACHTUNG: Die Bahnberechnung in der Brennphase ist unsicher - der Fehlerkorridor reicht von Alaska bis Kamtschatka.',
+    updatesThreatLevel: 'high' },
+  { id: 'amb-3', timestamp: 70, type: 'satellite-data', priority: 'critical', source: 'Satellite Network',
+    title: 'Zweite Signatur bei Dombarovsky?',
+    content: 'SBIRS meldet eine zweite, schwächere Signatur nahe Dombarovsky. Confidence: 40 %. Ein zweiter Start - oder eine Reflexion an Eiswolken? DSP sieht nichts, kann aber die Region gerade schlecht einsehen.' },
+  { id: 'amb-4', timestamp: 110, type: 'diplomatic-message', priority: 'high', source: 'State Department',
+    title: 'NRRC: Notifikation fehlt - oder ist unleserlich',
+    content: 'Nach dem Abkommen von 1988 muss Russland jeden ICBM-Start 24 Stunden vorher melden. Im NRRC liegt nichts vor. Ein Faxeingang von 22:14 Uhr ist unleserlich - Übertragungsfehler, sagt die Technik. Ob das die Notifikation war, weiß niemand.' },
+  { id: 'amb-5', timestamp: 150, type: 'intelligence-report', priority: 'high', source: 'NSA',
+    title: 'SIGINT: Testgelände aktiv - Raketentruppen auch',
+    content: 'Das Testgelände Kura auf Kamtschatka meldet Empfangsbereitschaft für Telemetrie - das spricht für einen Test. Gleichzeitig erhöhte Bereitschaft bei drei Divisionen der Strategischen Raketentruppen - das spricht dagegen. Oder Moskau rechnet mit einer Fehlreaktion von uns.' },
+  { id: 'amb-6', timestamp: 200, type: 'radar-detection', priority: 'high', source: 'Early Warning System',
+    title: 'Bahn-Update: Der Zielpunkt wandert',
+    content: 'Neue Berechnung: Endpunkt jetzt irgendwo zwischen den Aleuten und Kamtschatka. Die zweite Signatur aus Dombarovsky ist verschwunden - kein einziger Radarkontakt. Abgebrochener Start? Fehldetektion? Oder ein Objekt, das unsere Radare nicht sehen?' },
+  { id: 'amb-7', timestamp: 250, type: 'intelligence-report', priority: 'medium', source: 'CIA',
+    title: 'HUMINT: Gemischte Indikatoren',
+    content: 'Der russische Generalstab tagt nachts - ungewöhnlich, bei Tests aber nicht ausgeschlossen. Staatsfernsehen: normales Nachtprogramm. Zwei Diplomaten der russischen Botschaft in Washington haben ihre Familien zum Flughafen gebracht. Zufall? Die CIA weiß es nicht.' },
+  { id: 'amb-8', timestamp: 310, type: 'system-alert', priority: 'critical', source: 'STRATCOM',
+    title: 'Midcourse: Ein Objekt - plus sechs Fragmente',
+    content: 'Cobra Dane verfolgt ein Hauptobjekt und sechs Fragmente. Bei Tests üblich: Stufentrennung, Testattrappen. Bei einem Angriff: Sprengköpfe und Täuschkörper. Admiral Bradford: "Ich kann Ihnen nicht sagen, was davon was ist. Niemand kann das."',
+    updatesThreatLevel: 'severe' },
+  { id: 'amb-9', timestamp: 370, type: 'diplomatic-message', priority: 'high', source: 'State Department',
+    title: 'Moskau: "Ordnungsgemäß gemeldeter Test"',
+    content: 'Öffentliche Erklärung des russischen Außenministeriums: "Ein planmäßiger Test. Die Notifikation erfolgte ordnungsgemäß. Jede Fehlinterpretation liegt in Washingtons Verantwortung." Einen Beleg für die Notifikation legt Moskau nicht vor.' },
+  { id: 'amb-10', timestamp: 430, type: 'military-status', priority: 'high', source: 'Pentagon',
+    title: 'Wiedereintritt über dem Beringmeer?',
+    content: 'Einige Fragmente zeigen Wiedereintritts-Signaturen über dem Beringmeer, andere nicht. Zwei Objekte verliert Cobra Dane aus der Spur. Die vollständige NORAD-Analyse wird erst in Stunden vorliegen.' },
+  { id: 'amb-11', timestamp: 500, type: 'system-alert', priority: 'critical', source: 'NORAD',
+    title: 'Seismisches Ereignis nahe Kura - unbestätigt',
+    content: 'Eine Messstation in Alaska registriert ein Ereignis nahe dem Testgelände Kura. Die Stärke passt zu einem inerten Testsprengkopf - oder zu einem Sprengkopf, der sein Ziel verfehlt hat. Zwei Fragmente bleiben unauffindbar.',
+    updatesThreatLevel: 'high' },
+  { id: 'amb-12', timestamp: 560, type: 'advisor-update', priority: 'high', source: 'White House',
+    title: 'Williams: "Wir werden es heute Nacht nicht erfahren"',
+    content: 'Stabschefin Williams, leise: "Mr. President, wir werden heute Nacht nicht erfahren, was das war. Vielleicht nie. Sie müssen entscheiden, ohne es zu wissen. Das ist der Job."' },
+]
+
+const ambiguousTrajectories: ICBMTrajectory[] = [
+  { id: 'amb-t1', origin: icbmTargets.plesetsk, target: icbmTargets.elmendorf, launchTime: 0, impactTime: 1150, status: 'mid-flight', type: 'ICBM' },
+  { id: 'amb-t2', origin: icbmTargets.dombarovsky, target: icbmTargets.anchorage, launchTime: 70, impactTime: 1240, status: 'mid-flight', type: 'ICBM' },
+]
+
 // Hinweis: Weitere Szenarien (False Alarm, Cyber-Attack, Ambiguous) werden in einem Follow-up aktualisiert
 // Um die Datei nicht zu groß zu machen
 
@@ -656,6 +715,18 @@ export const scenarios: Scenario[] = [
     correctDecision: 'verify-intelligence',
     trajectories: cyberTrajectories,
     historicalContext: '2008 drang die "AGENT.BTZ" Malware in Pentagon-Systeme ein über einen infizierten USB-Stick. 2010 infizierte Stuxnet iranische Nuklearanlagen. Cyber-Angriffe auf nukleare Kommando-und-Kontroll-Systeme sind nicht hypothetisch - sie sind eine reale Bedrohung. Ein ausgeklügelter Angriff könnte gefälschte Raketenstarts vortäuschen und so einen echten Atomkrieg auslösen.'
+  },
+  {
+    id: 'ambiguous',
+    title: 'Szenario 5: Nebel - Wenn Klarheit nie kommt',
+    description: 'Ein einzelner russischer Start, keine Notifikation, ein Kurs, der mal nach Alaska und mal nach Kamtschatka zeigt. Jede Information lässt zwei Lesarten zu. Diesmal wird es keine Gewissheit geben.',
+    initialThreatLevel: 'elevated',
+    duration: 600,
+    events: ambiguousEvents,
+    advisors: createAdvisors('ambiguous'),
+    decisions: initialDecisions,
+    trajectories: ambiguousTrajectories,
+    historicalContext: 'Am 25. Januar 1995 startete Norwegen eine Forschungsrakete. Die Notifikation an Moskau war verschickt worden, hatte die russischen Radarstationen aber nie erreicht. Die Flugbahn ähnelte der einer Trident-Rakete, die einen EMP-Schlag vorbereiten könnte. Präsident Jelzin aktivierte zum ersten Mal den nuklearen Koffer. Nach etwa acht Minuten wurde klar, dass die Rakete vom russischen Territorium wegflog. Bis dahin hatte niemand Gewissheit.'
   },
 ]
 

@@ -1,4 +1,5 @@
 import {
+  Advisor,
   FollowUpEvent,
   NuclearUse,
   Scenario,
@@ -14,6 +15,7 @@ import { getFollowUpEventsForDecision } from '../data/followUpEvents'
 import { getDecisionEffect, isDecisionPossible } from './effects'
 import { getTruthDependentEvents } from './clues'
 import { getAdvisorReaction } from './reactions'
+import { applyTrustChange, initialTrust, trustDeltas } from './advisorTrust'
 
 // ============================================
 // SIMULATIONSKERN (reine Funktionen, ohne React)
@@ -60,7 +62,7 @@ const FINAL_FALLBACK = ['final-wait-impact', 'final-limited-strike', 'final-defe
 
 const NUCLEAR_RANK: Record<NuclearUse, number> = { none: 0, demonstration: 1, limited: 2, massive: 3 }
 
-export const createInitialWorld = (truth: ScenarioTruth): WorldState => ({
+export const createInitialWorld = (truth: ScenarioTruth, advisors: Advisor[] = []): WorldState => ({
   escalation: truth.initialEscalation,
   clarity: 10,
   deterrence: truth.initialDeterrence,
@@ -79,6 +81,8 @@ export const createInitialWorld = (truth: ScenarioTruth): WorldState => ({
   nuclearUse: 'none',
   posture: 'none',
   thresholdsFired: [],
+  advisorTrust: initialTrust(advisors),
+  advisorsBroken: [],
 })
 
 export const createInitialState = (scenario: Scenario, truth: ScenarioTruth): SimulationState => ({
@@ -97,9 +101,14 @@ export const createInitialState = (scenario: Scenario, truth: ScenarioTruth): Si
   availableDecisions: scenario.decisions.map(d => d.id).filter(id => isDecisionPossible(id, truth)),
   gameEnded: false,
   pendingFollowUpEvents: [],
-  world: createInitialWorld(truth),
+  world: createInitialWorld(truth, scenario.advisors),
   pendingUnlocks: [],
 })
+
+const capClarity = (world: WorldState, truth: ScenarioTruth): WorldState =>
+  truth.clarityCap !== undefined && world.clarity > truth.clarityCap ? { ...world, clarity: truth.clarityCap } : world
+
+const MILITARY_DEESCALATION = ['after-scramble-recall-all', 'after-defcon1-downgrade']
 
 const applyEffects = (world: WorldState, effects: WorldEffects | undefined): WorldState => {
   if (!effects) return world
@@ -136,17 +145,33 @@ export const applyDecision = (
   if (!decision) return prev
 
   const now = prev.elapsedTime
-  const effect = getDecisionEffect(decisionId)
+  const baseEffect = getDecisionEffect(decisionId)
+  // Zerbrochenes Vertrauen schwächt die Wirkung von Befehlen
+  const broken = prev.world.advisorsBroken
+  const effect = { ...baseEffect }
+  if (effect.escalation !== undefined && effect.escalation < 0) {
+    if (broken.includes('secstate') && decision.category === 'diplomatic') effect.escalation *= 0.5
+    if (broken.includes('stratcom') && MILITARY_DEESCALATION.includes(decisionId)) effect.escalation *= 0.5
+  }
+  if (effect.deterrence !== undefined && effect.deterrence > 0 && broken.includes('cjcs')) effect.deterrence *= 0.5
 
   // --- Folge-Events: generisch, aber ersetzt/ergänzt durch die verdeckte Wahrheit ---
   const truthEvents = getTruthDependentEvents(decisionId, truth)
   const base = truthEvents.replace ?? getFollowUpEventsForDecision(scenario.id, decisionId)
   const extra = truthEvents.extra.filter(e => !prev.world.thresholdsFired.includes(`clue:${e.id}`))
   const reaction = getAdvisorReaction(decision.category, prev.currentPhase)
-  const newEvents = schedule([...base, ...extra, ...(reaction ? [reaction] : [])], now, `${decisionId}-${prev.currentPhase}`)
+  const trustChange = applyTrustChange(
+    scenario.advisors, prev.world.advisorTrust, prev.world.advisorsBroken,
+    trustDeltas(scenario.advisors, decision, baseEffect, now),
+  )
+  const newEvents = schedule(
+    [...base, ...extra, ...(reaction ? [reaction] : []), ...trustChange.events],
+    now, `${decisionId}-${prev.currentPhase}`,
+  )
 
   // --- Weltzustand ---
-  let world = applyEffects(prev.world, effect)
+  let world = capClarity(applyEffects(prev.world, effect), truth)
+  world = { ...world, advisorTrust: trustChange.trust, advisorsBroken: trustChange.broken }
   world = { ...world, thresholdsFired: [...world.thresholdsFired, ...extra.map(e => `clue:${e.id}`)] }
   if (effect.nuclearUse && NUCLEAR_RANK[effect.nuclearUse] > NUCLEAR_RANK[world.nuclearUse]) {
     world = {
@@ -215,7 +240,9 @@ export const applyDecision = (
 // Ihre Alarmierung, Sie reagieren auf deren Reaktion. Ein offener heißer Draht bremst.
 const escalationDriftPerSecond = (world: WorldState, truth: ScenarioTruth): number => {
   const { escalation, flags } = world
-  const damping = flags.hotline ? 0.45 : flags.backchannel ? 0.7 : 1
+  // Ohne Außenministerin verliert auch der heiße Draht an Wirkung
+  const hotlineDamping = world.advisorsBroken.includes('secstate') ? 0.7 : 0.45
+  const damping = flags.hotline ? hotlineDamping : flags.backchannel ? 0.7 : 1
   if (escalation > SPIRAL_THRESHOLD) {
     let drift = (escalation - SPIRAL_THRESHOLD) * 0.0035 * damping * truth.escalationSensitivity
     if (flags.defcon1 && flags.bombersAirborne) drift += 0.02 * damping // Unfallrisiko bei beidseitiger Maximalbereitschaft
@@ -283,8 +310,15 @@ export const tick = (
 
   let world = prev.world
   // Lagebild verbessert sich langsam von allein und durch jede eingehende Meldung
-  world = applyEffects(world, { clarity: dt * 0.03 + newScenarioEvents.length * 2 })
-  for (const e of triggered) world = applyEffects(world, e.effects)
+  // In Lagen ohne erreichbare Gewissheit wächst auch das passive Lagebild langsamer
+  const passiveFactor = (world.advisorsBroken.includes('nsa') ? 0.5 : 1) * ((truth.clarityCap ?? 100) / 100)
+  world = applyEffects(world, { clarity: (dt * 0.03 + newScenarioEvents.length * 2) * passiveFactor })
+  const clueFactor = world.advisorsBroken.includes('cia') ? 0.6 : 1
+  for (const e of triggered) {
+    const fx = e.effects
+    world = applyEffects(world, fx && fx.clarity ? { ...fx, clarity: fx.clarity * clueFactor } : fx)
+  }
+  world = capClarity(world, truth)
 
   // Eskalationsdrift
   const drift = world.nuclearUse === 'massive' ? 0 : escalationDriftPerSecond(world, truth)

@@ -92,6 +92,13 @@ const overrides: Record<string, ByTruth> = {
         'KH-11 Imagery (0,1m): Keine offenen Silos, keine Rauchfahnen, keine Brandspuren an Startrampen. Mobile Werfer stehen in ihren Hallen. Auffällig: Über den gemeldeten Koordinaten liegt eine geschlossene Wolkendecke in großer Höhe - bei tiefstehender Sonne.',
         { clarity: 30 }),
     ],
+    'ambiguous-test': [
+      ev('sat-amb-1', 45, 'Satellite Network', 'satellite-data', 'high', 'KH-11 Neuausrichtung läuft',
+        'NRO richtet Keyhole-Satelliten auf Plesetsk und Dombarovsky aus. 2-3 Minuten bis zu hochauflösenden Bildern.'),
+      ev('sat-amb-2', 160, 'Satellite Network', 'satellite-data', 'critical', 'Ein Start - und viele offene Fragen',
+        'Plesetsk: EINE Startrampe mit frischen Brandspuren, Bergungsfahrzeuge vor Ort - typisch für einen Test. Dombarovsky: geschlossene Wolkendecke, keine Sicht. Teikowo: Vier Stellplätze mobiler Werfer sind leer. Routineübung? Verlegung? Die Bilder beantworten eine Frage und werfen zwei neue auf.',
+        { clarity: 15 }),
+    ],
     'cyber-deception': [
       ev('sat-cy-1', 45, 'Satellite Network', 'satellite-data', 'high', 'KH-11 Neuausrichtung läuft',
         'NRO richtet Keyhole-Satelliten auf die gemeldeten Startorte aus. 2-3 Minuten bis zu hochauflösenden Bildern.'),
@@ -105,6 +112,9 @@ const overrides: Record<string, ByTruth> = {
 // Zusätzliche Hinweise (werden an die Folge-Events angehängt)
 const clues: Record<string, ByTruth> = {
   'verify-intelligence': {
+    'ambiguous-test': [ev('clue-verify-amb', 110, 'NSA', 'intelligence-report', 'high', 'Verifikation: Ein Start ist echt - der Rest nicht beweisbar',
+      'Der Start aus Plesetsk ist real, drei unabhängige Sensoren bestätigen ihn. Die zweite Signatur aus Dombarovsky taucht in keinem anderen System auf. Die Bahnberechnung von Thule enthält einen bekannten Modellfehler für flache Bahnen - der berechnete Zielpunkt Alaska kann um 2.000 km danebenliegen. Ein Test passt. Ein Einzelschuss passt auch.',
+      { clarity: 15 })],
     counterforce: [ev('clue-verify-cf', 110, 'NSA', 'intelligence-report', 'critical', 'Verifikation: Sensoren unabhängig voneinander',
       'Forensik der Rohdaten: DSP, SBIRS und Thule-Radar nutzen unterschiedliche Hardware, unterschiedliche Software, unterschiedliche Bodenstationen - und zeigen konsistente, leicht abweichende Werte. So sehen echte Messungen aus. Die Lücke bei Clear (Alaska) ist ein bekannter Wartungsausfall.',
       { clarity: 25 })],
@@ -119,6 +129,9 @@ const clues: Record<string, ByTruth> = {
       { clarity: 30 })],
   },
   'launch-recon-aircraft': {
+    'ambiguous-test': [ev('clue-recon-amb', 200, 'NSA', 'intelligence-report', 'high', 'SIGINT: Testfunk und Gefechtsfunk gleichzeitig',
+      'Auf den Telemetriefrequenzen von Kura: der typische Ablauf eines Tests, Zeitansagen, Empfangsbestätigungen. Auf den Kommandonetzen der Raketentruppen: erhöhte Bereitschaft in drei Divisionen. Entweder rechnet Moskau mit einer Fehlreaktion von uns - oder der Test ist eine Tarnung.',
+      { clarity: 10 })],
     decapitation: [ev('clue-recon-dec', 200, 'NSA', 'intelligence-report', 'critical', 'SIGINT: Russische Marine sucht ihr eigenes Boot',
       'Intercepts der russischen Nordflotte: Wiederholte Rufe an ein bestimmtes Borei-Boot, keine Antwort. Der Generalstab befiehlt anderen Einheiten, "Kontakt um jeden Preis herzustellen". Das klingt nicht nach Angriff. Das klingt nach Kontrollverlust.',
       { clarity: 30 })],
@@ -130,6 +143,9 @@ const clues: Record<string, ByTruth> = {
       { clarity: 25 })],
   },
   'emergency-communication': {
+    'ambiguous-test': [ev('clue-comm-amb', 100, 'State Department', 'diplomatic-message', 'high', 'Moskau: "Ein angekündigter Test"',
+      'Russische Seite, kühl: "Ein planmäßiger Test zum Gelände Kura. Er wurde gemäß dem Abkommen von 1988 gemeldet." Auf die Bitte, die Notifikation erneut zu senden: "Prüfen Sie Ihre eigenen Eingänge." Stimmanalyse: keine Auffälligkeiten. Das beweist allerdings wenig.',
+      { clarity: 12, escalation: -3 })],
     decapitation: [ev('clue-comm-dec', 100, 'State Department', 'diplomatic-message', 'critical', 'Moskau: "Ein Boot - nicht autorisiert"',
       'Der russische Präsident persönlich, hörbar erschüttert: "Ein U-Boot-Kommandant hat ohne Befehl gehandelt. Wir versuchen, das Boot zu erreichen. Ich biete Ihnen die Position aller unserer anderen Boote an. Bitte - antworten Sie nicht auf Moskau." Stimmanalyse: hohe Belastung, keine Täuschungsmerkmale.',
       { clarity: 25 })],
@@ -141,6 +157,9 @@ const clues: Record<string, ByTruth> = {
       { clarity: 25 })],
   },
   'backchannels-activate': {
+    'ambiguous-test': [ev('clue-bc-amb', 150, 'State Department', 'diplomatic-message', 'high', 'Rückkanal: Widersprüchliche Antworten',
+      'Kasachstan bestätigt eine Luftraumsperrung über Kamtschatka für heute Nacht - üblich bei Tests. Beijing dagegen: "Moskau hat uns über keinen Test informiert. Das tun sie sonst." Zwei glaubwürdige Quellen, zwei verschiedene Geschichten.',
+      { clarity: 12 })],
     decapitation: [ev('clue-bc-dec', 150, 'State Department', 'diplomatic-message', 'high', 'Rückkanal: Kreml in Panik',
       'Schweizer Botschafter: Im russischen Außenministerium herrscht offenes Chaos. Ein Beamter flüsterte: "Wir haben ein Boot verloren." Der Kreml bittet um sofortigen Direktkontakt.',
       { clarity: 20 })],
@@ -152,6 +171,9 @@ const clues: Record<string, ByTruth> = {
       { clarity: 20 })],
   },
   'contact-allies': {
+    'ambiguous-test': [ev('clue-allies-amb', 140, 'CIA', 'intelligence-report', 'high', 'Fylingdales: Kurs eher nach Osten',
+      'Das britische Radar Fylingdales sah das Objekt nur kurz, aber seine Bahn zeigte eher nach Osten Richtung Pazifik als nach Nordamerika. Norwegen meldet nichts. Die Briten betonen: "Unsere Daten sind zu kurz für eine sichere Aussage."',
+      { clarity: 12 })],
     'sensor-fault': [ev('clue-allies-fa', 140, 'CIA', 'intelligence-report', 'high', 'Verbündete sehen nichts',
       'Japanische Aegis-Zerstörer, südkoreanische Radare und RAF Fylingdales: KEINE Kontakte. Nicht ein einziger. Nur die amerikanischen Satelliten melden Starts.',
       { clarity: 25 })],
@@ -160,6 +182,9 @@ const clues: Record<string, ByTruth> = {
       { clarity: 25 })],
   },
   'after-comm-demand-proof': {
+    'ambiguous-test': [ev('clue-proof-amb', 60, 'State Department', 'diplomatic-message', 'high', 'Moskau schickt Telemetrie - verschlüsselt',
+      'Moskau übermittelt einen Telemetrie-Datensatz des Tests, aber im eigenen Format und teilweise verschlüsselt. NSA braucht Stunden für eine Bewertung. Die Silos von Dombarovsky zeigt Moskau nicht: "Militärisches Geheimnis."',
+      { clarity: 10, escalation: 2 })],
     counterforce: [ev('clue-proof-cf', 60, 'State Department', 'diplomatic-message', 'critical', 'Moskau lehnt ab',
       'Antwort über MOLINK: "Die Russische Föderation lässt sich keine Bedingungen diktieren." Keine Silo-Öffnung, keine Live-Daten. Sie haben auch nichts dementiert.',
       { clarity: 20 })],
@@ -174,6 +199,9 @@ const clues: Record<string, ByTruth> = {
       { clarity: 30, escalation: -5 })],
   },
   'after-comm-accept-data-exchange': {
+    'ambiguous-test': [ev('clue-data-amb', 70, 'NSA', 'intelligence-report', 'high', 'Datenabgleich: Ziel Kura - laut Moskau',
+      'Russische Bahndaten zeigen einen Endpunkt auf dem Testgelände Kura, plausibel und konsistent. Aber: Die Daten kommen genau von der Seite, deren Absicht wir prüfen wollen. Für Dombarovsky liefert Moskau gar nichts.',
+      { clarity: 10 })],
     decapitation: [ev('clue-data-dec', 70, 'NSA', 'intelligence-report', 'high', 'Datenabgleich: Ein einzelnes Boot',
       'Russische und amerikanische Daten decken sich: vier Starts von einer Position, sonst nichts. Russische Daten zeigen zusätzlich die Funkrufe der Nordflotte an das vermisste Boot.',
       { clarity: 25 })],

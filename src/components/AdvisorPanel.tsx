@@ -4,6 +4,8 @@ import { getDecisionById } from '../data/decisions'
 interface AdvisorPanelProps {
   advisors: Advisor[]
   elapsedTime: number
+  trust?: Record<string, number>
+  broken?: string[]
 }
 
 const getPersonalityIcon = (personality: string) => {
@@ -36,12 +38,39 @@ const formatTimestamp = (seconds: number): string => {
   return `T+${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
 }
 
-export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProps) {
+const trustColor = (t: number) => (t >= 50 ? 'bg-safe-green' : t >= 35 ? 'bg-warning-yellow' : 'bg-threat-red')
+
+export default function AdvisorPanel({ advisors, elapsedTime, trust = {}, broken = [] }: AdvisorPanelProps) {
   return (
     <div className="bg-dark-panel border border-gray-700 p-4 h-full flex flex-col">
-      <h2 className="text-xl font-bold text-white mb-4 flex items-center">
+      <h2 className="text-xl font-bold text-white mb-3 flex items-center">
         <span className="mr-2">👥</span> BERATER
       </h2>
+
+      {/* Kabinett: Vertrauen in Ihre Führung */}
+      <div className="grid grid-cols-2 gap-x-3 gap-y-1 mb-3 flex-shrink-0">
+        {advisors.map(advisor => {
+          const t = Math.round(trust[advisor.id] ?? 70)
+          const isBroken = broken.includes(advisor.id)
+          return (
+            <div
+              key={advisor.id}
+              className="text-[11px]"
+              title={`${advisor.title}: Vertrauen in Ihre Führung ${t}/100${isBroken ? ' - Bruch' : ''}`}
+            >
+              <div className="flex justify-between">
+                <span className={isBroken ? 'text-threat-red line-through' : 'text-gray-300'}>
+                  {getPersonalityIcon(advisor.personality)} {advisor.name.split(' ').slice(-1)[0]}
+                </span>
+                <span className="font-mono text-gray-400">{isBroken ? 'BRUCH' : t}</span>
+              </div>
+              <div className="h-1 bg-gray-800">
+                <div className={`h-full transition-all duration-500 ${trustColor(t)}`} style={{ width: `${t}%` }} />
+              </div>
+            </div>
+          )
+        })}
+      </div>
 
       <div className="flex-1 overflow-y-auto space-y-4">
         {advisors.map((advisor) => {
@@ -58,7 +87,7 @@ export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProp
           return (
             <div
               key={advisor.id}
-              className="bg-gray-800/50 border border-gray-600 p-3"
+              className={`bg-gray-800/50 border p-3 ${broken.includes(advisor.id) ? 'border-threat-red/60 opacity-60' : 'border-gray-600'}`}
             >
               <div className="flex items-start gap-3 mb-3">
                 <div className="text-3xl">
@@ -72,7 +101,7 @@ export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProp
                   <div className={`text-xs font-semibold ${getConfidenceColor(latestStatement.confidence)}`}>
                     Aktuell: {latestStatement.confidence.toUpperCase()}
                   </div>
-                  <div className="text-[10px] text-gray-500 uppercase tracking-widest">Vertrauen</div>
+                  <div className="text-[10px] text-gray-500 uppercase tracking-widest">Gewissheit</div>
                 </div>
               </div>
 

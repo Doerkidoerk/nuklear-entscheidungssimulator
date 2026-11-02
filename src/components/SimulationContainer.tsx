@@ -58,6 +58,13 @@ function Simulation({ scenario, blind }: { scenario: Scenario; blind: boolean })
         finalClarity: Math.round(state.world.clarity),
         finalDeterrence: Math.round(state.world.deterrence),
         endTime: state.elapsedTime,
+        cabinet: scenario.advisors.map(a => ({
+          id: a.id,
+          name: a.name,
+          title: a.title,
+          trust: Math.round(state.world.advisorTrust[a.id] ?? 0),
+          broken: state.world.advisorsBroken.includes(a.id),
+        })),
       }
       navigate('/debriefing', { state: { debriefing } })
     }, 3000)
@@ -140,12 +147,21 @@ function Simulation({ scenario, blind }: { scenario: Scenario; blind: boolean })
         </div>
 
         <div className="col-span-4 row-span-10">
-          <MapView trajectories={scenario.trajectories || []} elapsedTime={state.elapsedTime} />
+          <MapView
+            trajectories={scenario.trajectories || []}
+            elapsedTime={state.elapsedTime}
+            flags={state.world.flags}
+          />
         </div>
 
         <div className="col-span-4 row-span-10 flex flex-col gap-4">
           <div className="flex-1 min-h-0">
-            <AdvisorPanel advisors={scenario.advisors} elapsedTime={state.elapsedTime} />
+            <AdvisorPanel
+              advisors={scenario.advisors}
+              elapsedTime={state.elapsedTime}
+              trust={state.world.advisorTrust}
+              broken={state.world.advisorsBroken}
+            />
           </div>
           <div className="flex-1 min-h-0">
             <DecisionPanel
@@ -166,7 +182,7 @@ function Simulation({ scenario, blind }: { scenario: Scenario; blind: boolean })
       </div>
 
       {state.isRunning && !state.gameEnded && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+        <div className="fixed bottom-6 left-6">
           <button
             onClick={state.isPaused ? resume : pause}
             className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 border border-gray-500"

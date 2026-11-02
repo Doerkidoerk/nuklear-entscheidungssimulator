@@ -49,14 +49,15 @@ export const scenarioTruths: Record<ScenarioType, ScenarioTruth> = {
       'Es war eine gezielte Täuschung. Eine staatlich unterstützte Hackergruppe hatte gefälschte Telemetrie in die Downlinks der Frühwarnsatelliten injiziert. Das Ziel: einen Atomkrieg zwischen den USA und Russland zu provozieren. Jede Eskalation Ihrerseits war genau das, was die Angreifer wollten.',
   },
   ambiguous: {
-    kind: 'sensor-fault',
+    kind: 'ambiguous-test',
     attackReal: false,
     adversary: 'Russland',
     initialEscalation: 35,
     initialDeterrence: 50,
-    escalationSensitivity: 0.9,
+    escalationSensitivity: 1.0,
+    clarityCap: 55,
     whatReallyHappened:
-      'Die Wahrheit blieb unklar. Vermutlich ein Teststart, der durch atmosphärische Bedingungen und technische Fehler zu widersprüchlichen Sensordaten führte.',
+      'Ob es ein Angriff hätte werden können, wurde nie abschließend geklärt. Die wahrscheinlichste Erklärung: ein Teststart einer RS-28 Sarmat von Plesetsk zum Testgelände Kura auf Kamtschatka, dessen frühe Flugphase zusammen mit einem Fehler im Bahnmodell von Thule wie ein Kurs auf Alaska aussah. Moskau bestand darauf, den Test gemeldet zu haben - in Washington kam nur ein unleserliches Fax an. Die zweite Signatur aus Dombarovsky wurde nie erklärt. Absicht, Schlamperei oder ein gezielter Test amerikanischer Nerven? Die Akten bleiben verschlossen. In dieser Lage war mehr als ein halbes Lagebild schlicht nicht zu haben.',
   },
 }
 

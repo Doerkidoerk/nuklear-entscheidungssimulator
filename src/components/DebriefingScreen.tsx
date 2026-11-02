@@ -92,6 +92,32 @@ export default function DebriefingScreen() {
           </div>
         </div>
 
+        {/* Kabinett */}
+        {debriefing.cabinet && debriefing.cabinet.length > 0 && (
+          <div className="bg-dark-panel border border-gray-700 p-6 mb-6">
+            <h2 className="text-2xl font-bold text-white mb-1">Ihr Kabinett</h2>
+            <p className="text-sm text-gray-500 mb-4">Wie viel Vertrauen Ihre Berater am Ende noch in Ihre Führung hatten</p>
+            <div className="grid md:grid-cols-2 gap-3">
+              {debriefing.cabinet.map(member => (
+                <div key={member.id} className="text-sm">
+                  <div className="flex justify-between mb-1">
+                    <span className={member.broken ? 'text-threat-red' : 'text-gray-200'}>
+                      {member.name} <span className="text-gray-500">· {member.title}</span>
+                    </span>
+                    <span className="font-mono text-white">{member.broken ? 'BRUCH' : member.trust}</span>
+                  </div>
+                  <div className="h-1.5 bg-gray-800">
+                    <div
+                      className={`h-full ${member.trust >= 50 ? 'bg-safe-green' : member.trust >= 35 ? 'bg-warning-yellow' : 'bg-threat-red'}`}
+                      style={{ width: `${member.trust}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Verlauf */}
         <div className="bg-dark-panel border border-gray-700 p-6 mb-6">
           <h2 className="text-2xl font-bold text-white mb-4">Ihre Befehle</h2>

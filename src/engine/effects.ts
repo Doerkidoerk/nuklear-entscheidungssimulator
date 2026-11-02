@@ -98,8 +98,8 @@ export const getDecisionEffect = (decisionId: string): DecisionEffect => decisio
 const moscowCooperates = (t: ScenarioTruth) => t.kind !== 'counterforce'
 
 export const decisionPremises: Record<string, (t: ScenarioTruth) => boolean> = {
-  'after-data-confirms-false': t => !t.attackReal,
-  'after-data-still-unclear': t => t.attackReal,
+  'after-data-confirms-false': t => !t.attackReal && t.kind !== 'ambiguous-test',
+  'after-data-still-unclear': t => t.attackReal || t.kind === 'ambiguous-test',
   'after-comm-mutual-stand-down': moscowCooperates,
   'after-comm-mutual-recall': moscowCooperates,
   'after-comm-no-response': t => !moscowCooperates(t),
@@ -107,9 +107,9 @@ export const decisionPremises: Record<string, (t: ScenarioTruth) => boolean> = {
   'after-comm-trust-shoigu': moscowCooperates,
   'after-satellite-trust-visual': t => t.kind === 'counterforce',
   'after-satellite-suspicion': t => t.attackReal,
-  'after-satellite-no-launches': t => !t.attackReal || t.kind === 'decapitation',
-  'after-recon-trust-sigint': moscowCooperates,
+  'after-satellite-no-launches': t => (!t.attackReal && t.kind !== 'ambiguous-test') || t.kind === 'decapitation',
   'after-allies-trust-uk': t => !t.attackReal,
+  'after-recon-trust-sigint': t => moscowCooperates(t) && t.kind !== 'ambiguous-test',
 }
 
 export const isDecisionPossible = (decisionId: string, truth: ScenarioTruth): boolean => {
