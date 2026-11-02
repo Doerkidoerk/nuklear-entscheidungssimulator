@@ -4,8 +4,13 @@ import { scenarios } from '../data/scenarios'
 export default function StartScreen() {
   const navigate = useNavigate()
 
+  const startBlind = () => {
+    const pick = scenarios[Math.floor(Math.random() * scenarios.length)]
+    navigate('/simulation/lage', { state: { scenarioId: pick.id, blind: true } })
+  }
+
   return (
-    <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+    <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
       <div className="max-w-4xl mx-auto p-8">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
@@ -19,11 +24,22 @@ export default function StartScreen() {
           </p>
         </div>
 
+        <button
+          onClick={startBlind}
+          className="w-full bg-threat-red/20 hover:bg-threat-red/30 border-2 border-threat-red p-6 mb-8 text-left transition-colors"
+        >
+          <div className="text-2xl font-bold text-white mb-2">⚠ ERNSTFALL - VERDECKTE LAGE</div>
+          <p className="text-gray-200 text-sm">
+            Empfohlen. Ein zufälliges Szenario, ohne dass Sie wissen, welches. Echter Angriff, Fehlalarm, Täuschung
+            oder Enthauptungsschlag? Das erfahren Sie erst im Debriefing - wie ein echter Präsident.
+          </p>
+        </button>
+
         <div className="bg-dark-panel border border-gray-700 p-6 mb-8">
-          <h2 className="text-xl font-bold text-white mb-4">SZENARIO AUSWÄHLEN</h2>
+          <h2 className="text-xl font-bold text-white mb-4">TRAININGSMODUS - SZENARIO AUSWÄHLEN</h2>
           <p className="text-gray-300 mb-6">
-            Jedes Szenario basiert auf realen historischen Ereignissen oder realistischen Bedrohungsszenarien.
-            Sie haben 10 Minuten Zeit, um Ihre Entscheidung zu treffen.
+            Hier kennen Sie die Auflösung schon vorher - gut, um einzelne Situationen zu studieren.
+            Für echte Spannung spielen Sie die verdeckte Lage.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

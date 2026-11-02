@@ -10,7 +10,7 @@ export default function MapView({ trajectories, elapsedTime }: MapViewProps) {
   return (
     <div className="bg-dark-panel border border-gray-700 p-4 h-full flex flex-col">
       <h2 className="text-xl font-bold text-white mb-4 flex items-center">
-        <span className="mr-2">🌍</span> BEDROHUNGSKARTE
+        <span className="mr-2">🌍</span> SENSORLAGE <span className="ml-2 text-xs font-normal text-gray-500">(unbestätigt)</span>
       </h2>
 
       <div className="flex-1 bg-gray-900 rounded relative overflow-hidden">
@@ -26,7 +26,7 @@ export default function MapView({ trajectories, elapsedTime }: MapViewProps) {
               <div className="space-y-2 text-left max-w-md mx-auto">
                 <div className="bg-threat-red/20 border border-threat-red p-3">
                   <div className="text-threat-red font-bold mb-2">
-                    ⚠ {trajectories.length} RAKETEN ERFASST
+                    ⚠ {trajectories.length} FLUGBAHNEN GEMELDET
                   </div>
                   <div className="text-sm text-gray-300 space-y-1">
                     {trajectories.slice(0, 5).map((traj, idx) => (

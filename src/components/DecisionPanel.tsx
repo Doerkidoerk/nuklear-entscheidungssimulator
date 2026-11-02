@@ -1,6 +1,8 @@
-import { Decision, DecisionHistoryEntry } from '../types'
+import { Decision, DecisionHistoryEntry, PendingUnlock } from '../types'
 import { useState } from 'react'
 import { getDecisionById } from '../data/decisions'
+import { STANDING_OPTIONS } from '../engine/simulation'
+import { getDecisionEffect } from '../engine/effects'
 
 interface DecisionPanelProps {
   availableDecisionIds: string[]
@@ -8,6 +10,9 @@ interface DecisionPanelProps {
   disabled: boolean
   decisionHistory: DecisionHistoryEntry[]
   currentPhase: number
+  statusMessage?: string
+  pendingUnlocks?: PendingUnlock[]
+  elapsedTime?: number
 }
 
 export default function DecisionPanel({
@@ -15,7 +20,10 @@ export default function DecisionPanel({
   onDecisionMade,
   disabled,
   decisionHistory,
-  currentPhase
+  currentPhase,
+  statusMessage,
+  pendingUnlocks = [],
+  elapsedTime = 0
 }: DecisionPanelProps) {
   const decisions = availableDecisionIds.map(id => getDecisionById(id)).filter((d): d is Decision => d !== undefined)
   const [selectedDecision, setSelectedDecision] = useState<Decision | null>(null)
@@ -23,7 +31,9 @@ export default function DecisionPanel({
 
   const handleDecisionClick = (decision: Decision) => {
     setSelectedDecision(decision)
-    if (decision.requiresConfirmation) {
+    // Alles, was Atomwaffen einsetzt oder das Spiel beendet, muss bestätigt werden
+    const effect = getDecisionEffect(decision.id)
+    if (decision.requiresConfirmation || effect.nuclearUse || effect.posture) {
       setShowConfirmation(true)
     } else {
       onDecisionMade(decision.id)
@@ -111,6 +121,48 @@ export default function DecisionPanel({
     )
   }
 
+  const situational = decisions.filter(d => !STANDING_OPTIONS.includes(d.id))
+  const standing = decisions.filter(d => STANDING_OPTIONS.includes(d.id))
+
+  const renderCard = (decision: Decision, compact: boolean) => (
+    <button
+      key={decision.id}
+      onClick={() => handleDecisionClick(decision)}
+      disabled={disabled}
+      title={decision.description}
+      className={`w-full text-left bg-gray-800/50 border ${compact ? 'p-2' : 'p-4'} transition-all duration-200 ${
+        disabled ? 'opacity-50 cursor-not-allowed' : getCategoryColor(decision.category)
+      }`}
+    >
+      <h3 className={`font-bold text-white ${compact ? 'text-sm' : 'mb-2'}`}>
+        {getDecisionEffect(decision.id).nuclearUse && <span className="text-threat-red mr-1">☢</span>}
+        {decision.title}
+      </h3>
+      <p className={`text-gray-300 ${compact ? 'text-xs line-clamp-2' : 'text-sm mb-3'}`}>{decision.description}</p>
+
+      {!compact && (
+        <div className="grid grid-cols-3 gap-2 text-xs">
+          <div>
+            <span className="text-gray-500">Eskalation:</span>
+            <div className="font-bold text-orange-400">{decision.militaryEscalation}/10</div>
+          </div>
+          <div>
+            <span className="text-gray-500">Diplomatie:</span>
+            <div className={`font-bold ${decision.diplomaticImpact > 0 ? 'text-green-400' : 'text-red-400'}`}>
+              {decision.diplomaticImpact > 0 ? '+' : ''}{decision.diplomaticImpact}
+            </div>
+          </div>
+          <div>
+            <span className="text-gray-500">Opfer:</span>
+            <div className="font-bold text-red-400 uppercase text-xs">
+              {decision.civilianCasualties}
+            </div>
+          </div>
+        </div>
+      )}
+    </button>
+  )
+
   return (
     <div className="bg-dark-panel border border-gray-700 p-4 h-full flex flex-col">
       <h2 className="text-xl font-bold text-white mb-2 flex items-center justify-between flex-shrink-0">
@@ -127,9 +179,9 @@ export default function DecisionPanel({
         <div className="mb-3 p-2 bg-gray-800/50 border border-gray-600 rounded flex-shrink-0">
           <div className="text-xs text-gray-400 mb-1">Vorherige Entscheidungen:</div>
           <div className="space-y-1">
-            {decisionHistory.map((entry, index) => (
+            {decisionHistory.slice(-3).map((entry, index) => (
               <div key={index} className="text-xs text-gray-300 flex items-start">
-                <span className="text-blue-400 mr-2">{index + 1}.</span>
+                <span className="text-blue-400 mr-2">{decisionHistory.length - Math.min(3, decisionHistory.length) + index + 1}.</span>
                 <span className="flex-1">{entry.decisionTitle}</span>
                 <span className="text-gray-500 ml-2">({Math.floor(entry.timestamp / 60)}:{(entry.timestamp % 60).toString().padStart(2, '0')})</span>
               </div>
@@ -139,50 +191,34 @@ export default function DecisionPanel({
       )}
 
       <div className="flex-1 overflow-y-auto space-y-3 min-h-0">
-        {decisions.length === 0 && !disabled && (
+        {decisions.length === 0 && (
           <div className="text-center text-gray-400 py-8">
-            <p className="mb-2">Keine weiteren Entscheidungen verfügbar</p>
-            <p className="text-sm">Warte auf Ereignisse...</p>
+            <p className="mb-2">Keine weiteren Befehle möglich</p>
+            <p className="text-sm">Die Ereignisse nehmen ihren Lauf...</p>
           </div>
         )}
-        {decisions.map((decision) => (
-          <button
-            key={decision.id}
-            onClick={() => handleDecisionClick(decision)}
-            disabled={disabled}
-            className={`w-full text-left bg-gray-800/50 border p-4 transition-all duration-200 ${
-              disabled ? 'opacity-50 cursor-not-allowed' : getCategoryColor(decision.category)
-            }`}
-          >
-            <h3 className="font-bold text-white mb-2">{decision.title}</h3>
-            <p className="text-sm text-gray-300 mb-3">{decision.description}</p>
-
-            <div className="grid grid-cols-3 gap-2 text-xs">
-              <div>
-                <span className="text-gray-500">Eskalation:</span>
-                <div className="font-bold text-orange-400">{decision.militaryEscalation}/10</div>
-              </div>
-              <div>
-                <span className="text-gray-500">Diplomatie:</span>
-                <div className={`font-bold ${decision.diplomaticImpact > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  {decision.diplomaticImpact > 0 ? '+' : ''}{decision.diplomaticImpact}
-                </div>
-              </div>
-              <div>
-                <span className="text-gray-500">Opfer:</span>
-                <div className="font-bold text-red-400 uppercase text-xs">
-                  {decision.civilianCasualties}
-                </div>
-              </div>
-            </div>
-          </button>
+        {pendingUnlocks.map((u, i) => (
+          <div key={i} className="text-xs text-gray-400 border border-dashed border-gray-600 p-2">
+            ⏳ Lagebericht ausstehend: <span className="text-gray-200">{u.sourceTitle}</span>
+            <span className="float-right font-mono">~{Math.max(0, u.at - elapsedTime)}s</span>
+          </div>
         ))}
+        {situational.length > 0 && (
+          <div className="text-xs uppercase tracking-widest text-blue-400">Aktuelle Lage</div>
+        )}
+        {situational.map(decision => renderCard(decision, false))}
+        {standing.length > 0 && (
+          <div className="text-xs uppercase tracking-widest text-gray-500 pt-2">
+            Stehende Optionen
+          </div>
+        )}
+        {standing.map(decision => renderCard(decision, situational.length > 0))}
       </div>
 
       {disabled && (
         <div className="mt-4 bg-gray-800 border border-gray-600 p-3 text-center flex-shrink-0">
           <p className="text-gray-400 text-sm">
-            Entscheidung bereits getroffen oder Simulation beendet
+            {statusMessage || 'Simulation beendet'}
           </p>
         </div>
       )}

@@ -1,4 +1,5 @@
 import { Advisor } from '../types'
+import { getDecisionById } from '../data/decisions'
 
 interface AdvisorPanelProps {
   advisors: Advisor[]
@@ -92,7 +93,7 @@ export default function AdvisorPanel({ advisors, elapsedTime }: AdvisorPanelProp
                     <p className="text-sm text-gray-200 italic">"{statement.content}"</p>
                     {statement.recommendation && (
                       <div className="mt-1 text-xs text-blue-400">
-                        → Empfehlung: {statement.recommendation}
+                        → Empfehlung: {getDecisionById(statement.recommendation)?.title ?? statement.recommendation}
                       </div>
                     )}
                   </div>

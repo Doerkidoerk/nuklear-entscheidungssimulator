@@ -29,6 +29,7 @@ export interface SimulationEvent {
   content: string
   data?: Record<string, unknown>
   updatesThreatLevel?: ThreatLevel
+  effects?: WorldEffects // Wirkung auf den Weltzustand, sobald das Event eintrifft
 }
 
 export type EventType =
@@ -52,6 +53,7 @@ export type EventSource =
   | 'Satellite Network'
   | 'Early Warning System'
   | 'USCYBERCOM'
+  | 'Situation Room'
 
 // Berater
 export interface Advisor {
@@ -151,6 +153,92 @@ export interface DecisionHistoryEntry {
   decisionTitle: string
   timestamp: number
   phase: number
+  clarityAtDecision?: number
+  escalationAtDecision?: number
+}
+
+// ============================================
+// WELTZUSTAND (verdeckte Spielmechanik)
+// ============================================
+
+// Was tatsächlich passiert - dem Spieler bis zum Debriefing unbekannt
+export type TruthKind = 'counterforce' | 'decapitation' | 'sensor-fault' | 'cyber-deception'
+
+export interface ScenarioTruth {
+  kind: TruthKind
+  attackReal: boolean
+  adversary: string // Wer reagiert auf unsere Alarmierung (für Eskalations-Events)
+  initialEscalation: number
+  initialDeterrence: number
+  escalationSensitivity: number // Wie nervös reagiert die Gegenseite auf unsere Alarmierung?
+  whatReallyHappened: string
+}
+
+// Endgültige Haltung des Präsidenten
+export type Posture =
+  | 'massive-strike'
+  | 'limited-strike'
+  | 'demonstration'
+  | 'ceasefire'
+  | 'stand-down'
+  | 'ride-out'
+  | 'no-retaliation'
+  | 'none'
+
+export type NuclearUse = 'none' | 'demonstration' | 'limited' | 'massive'
+
+export interface WorldFlags {
+  hotline: boolean
+  backchannel: boolean
+  defcon1: boolean
+  bombersAirborne: boolean
+  ssbnSecured: boolean
+  delegated: boolean
+  missileDefense: boolean
+  evacuation: boolean
+}
+
+export interface WorldEffects {
+  escalation?: number
+  clarity?: number
+  deterrence?: number
+  flags?: Partial<WorldFlags>
+}
+
+export interface WorldState {
+  escalation: number // 0-100: Eskalationsdruck zwischen den Mächten. 100 = Spirale außer Kontrolle
+  clarity: number // 0-100: Wie gut ist Ihr Lagebild?
+  deterrence: number // 0-100: Überlebens-/Vergeltungsfähigkeit, falls der Angriff echt ist
+  escalationTrend: number // Veränderung pro Minute (für die Anzeige)
+  peakEscalation: number
+  flags: WorldFlags
+  nuclearUse: NuclearUse
+  nuclearUseAt?: number
+  nuclearUseClarity?: number
+  posture: Posture
+  postureAt?: number
+  postureClarity?: number
+  thresholdsFired: string[]
+  endReason?: 'decision' | 'timeout' | 'spiral'
+}
+
+export interface OutcomeScores {
+  lives: number
+  judgment: number
+  control: number
+  deterrence: number
+  total: number
+}
+
+export interface Outcome {
+  id: string
+  title: string
+  narrative: string
+  casualties: string
+  tone: 'catastrophic' | 'grave' | 'mixed' | 'good'
+  scores: OutcomeScores
+  grade: string
+  lessons: string[]
 }
 
 // Simulation State
@@ -170,18 +258,29 @@ export interface SimulationState {
   availableDecisions: string[] // IDs der aktuell verfügbaren Entscheidungen
   gameEnded: boolean // Ist das Spiel beendet?
   pendingFollowUpEvents: FollowUpEvent[] // Wartende Folge-Events
+  world: WorldState
+  endAt?: number // Verzögertes Spielende (Sekunden), damit Folge-Events noch ablaufen
+  lastOrder?: { title: string; at: number } // Zuletzt erteilter Befehl (für Rückmeldung im UI)
+  pendingUnlocks: PendingUnlock[] // Folgeoptionen, die erst mit dem Lagebericht verfügbar werden
+}
+
+export interface PendingUnlock {
+  sourceTitle: string
+  ids: string[]
+  at: number
 }
 
 // Debriefing nach der Simulation
 export interface DebriefingData {
   scenarioId: ScenarioType
   scenarioTitle: string
-  playerDecision: Decision
-  decisionTime: number
-  wasCorrect: boolean
-  consequences: Consequence[]
-  historicalComparison: string
+  blind: boolean
+  outcome: Outcome
   whatReallyHappened: string
-  lessonsLearned: string[]
-  score: number
+  historicalComparison: string
+  decisionLog: DecisionHistoryEntry[]
+  peakEscalation: number
+  finalClarity: number
+  finalDeterrence: number
+  endTime: number
 }

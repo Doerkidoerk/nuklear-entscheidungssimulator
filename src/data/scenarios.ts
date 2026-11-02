@@ -20,7 +20,13 @@ const icbmTargets = {
   dombarovsky: { lat: 50.8047, lng: 59.6200, name: 'Dombarovsky Air Base' },
   kozelsk: { lat: 54.0333, lng: 35.7833, name: 'Kozelsk (12th Missile Division)' },
   barents: { lat: 71.0, lng: 35.0, name: 'Barentssee (SLBM)' },
-  pacific: { lat: 50.0, lng: -175.0, name: 'Nordpazifik (SLBM)' }
+  pacific: { lat: 50.0, lng: -175.0, name: 'Nordpazifik (SLBM)' },
+
+  // Weitere Ziele / Startpunkte
+  hawaii: { lat: 21.3069, lng: -157.8583, name: 'Honolulu / Pearl Harbor' },
+  seattle: { lat: 47.6062, lng: -122.3321, name: 'Seattle' },
+  sanFrancisco: { lat: 37.7749, lng: -122.4194, name: 'San Francisco' },
+  sohae: { lat: 39.66, lng: 124.705, name: 'Sohae (Nordkorea)' },
 }
 
 // ===========================================
@@ -362,6 +368,24 @@ export const decapitationTrajectories: ICBMTrajectory[] = [
   { id: 'dec-t2', origin: icbmTargets.pacific, target: icbmTargets.stratcom, launchTime: 0, impactTime: 610, status: 'mid-flight', type: 'SLBM', warheadYield: '100 kt' },
 ]
 
+// Die Karte zeigt, was die SENSOREN melden - nicht, was wirklich geschieht.
+// Auch Fehlalarm und Täuschung erzeugen deshalb Flugbahnen auf dem Schirm.
+const falseAlarmTrajectories: ICBMTrajectory[] = [
+  { id: 'fa-t1', origin: icbmTargets.sohae, target: icbmTargets.hawaii, launchTime: 0, impactTime: 1260, status: 'mid-flight', type: 'ICBM' },
+  { id: 'fa-t2', origin: icbmTargets.sohae, target: icbmTargets.seattle, launchTime: 0, impactTime: 1500, status: 'mid-flight', type: 'ICBM' },
+  { id: 'fa-t3', origin: icbmTargets.sohae, target: icbmTargets.sanFrancisco, launchTime: 0, impactTime: 1560, status: 'mid-flight', type: 'ICBM' },
+  { id: 'fa-t4', origin: icbmTargets.sohae, target: icbmTargets.losAngeles, launchTime: 0, impactTime: 1600, status: 'mid-flight', type: 'ICBM' },
+]
+
+const cyberTrajectories: ICBMTrajectory[] = [
+  { id: 'cy-t1', origin: icbmTargets.kozelsk, target: icbmTargets.washington, launchTime: 0, impactTime: 1800, status: 'mid-flight', type: 'ICBM' },
+  { id: 'cy-t2', origin: icbmTargets.kozelsk, target: icbmTargets.newYork, launchTime: 0, impactTime: 1790, status: 'mid-flight', type: 'ICBM' },
+  { id: 'cy-t3', origin: icbmTargets.dombarovsky, target: icbmTargets.minuteman, launchTime: 0, impactTime: 1750, status: 'mid-flight', type: 'ICBM' },
+  { id: 'cy-t4', origin: icbmTargets.dombarovsky, target: icbmTargets.warren, launchTime: 0, impactTime: 1760, status: 'mid-flight', type: 'ICBM' },
+  { id: 'cy-t5', origin: icbmTargets.plesetsk, target: icbmTargets.chicago, launchTime: 0, impactTime: 1780, status: 'mid-flight', type: 'ICBM' },
+  { id: 'cy-t6', origin: icbmTargets.plesetsk, target: icbmTargets.stratcom, launchTime: 0, impactTime: 1770, status: 'mid-flight', type: 'ICBM' },
+]
+
 // Hinweis: Weitere Szenarien (False Alarm, Cyber-Attack, Ambiguous) werden in einem Follow-up aktualisiert
 // Um die Datei nicht zu groß zu machen
 
@@ -507,6 +531,7 @@ export const scenarios: Scenario[] = [
     advisors: createAdvisors('false-alarm'),
     decisions: initialDecisions,
     correctDecision: 'verify-intelligence',
+    trajectories: falseAlarmTrajectories,
     historicalContext: 'Am 26. September 1983 meldete das sowjetische Frühwarnsystem 5 US-ICBM-Starts. Stanislaw Petrow, diensthabender Offizier, erkannte Widersprüche und meldete es als Fehlalarm - gegen die Prozeduren. Er rettete damit wahrscheinlich die Welt. Es waren Sonnenlicht-Reflexionen auf Wolken. 1980 zeigte ein NORAD-Computer "2.200 sowjetische ICBM-Starts" - Ursache: defekter 46-Cent-Chip.'
   },
   {
@@ -629,6 +654,7 @@ export const scenarios: Scenario[] = [
     advisors: createAdvisors('cyber-attack'),
     decisions: initialDecisions,
     correctDecision: 'verify-intelligence',
+    trajectories: cyberTrajectories,
     historicalContext: '2008 drang die "AGENT.BTZ" Malware in Pentagon-Systeme ein über einen infizierten USB-Stick. 2010 infizierte Stuxnet iranische Nuklearanlagen. Cyber-Angriffe auf nukleare Kommando-und-Kontroll-Systeme sind nicht hypothetisch - sie sind eine reale Bedrohung. Ein ausgeklügelter Angriff könnte gefälschte Raketenstarts vortäuschen und so einen echten Atomkrieg auslösen.'
   },
 ]
