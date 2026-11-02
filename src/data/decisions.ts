@@ -44,7 +44,7 @@ export const initialDecisions: Decision[] = [
     civilianCasualties: 'none',
     requiresConfirmation: false,
     followUpEvents: followUpEventsByDecision['realign-satellites'],
-    followUpDecisions: ['after-satellite-trust-visual', 'after-satellite-suspicion'],
+    followUpDecisions: ['after-satellite-trust-visual', 'after-satellite-suspicion', 'after-satellite-no-launches'],
     consequences: [
       {
         type: 'intelligence',
@@ -84,7 +84,7 @@ export const initialDecisions: Decision[] = [
     civilianCasualties: 'none',
     requiresConfirmation: false,
     followUpEvents: followUpEventsByDecision['emergency-communication'],
-    followUpDecisions: ['after-comm-accept-data-exchange', 'after-comm-reject-russian-data', 'after-comm-demand-proof', 'after-comm-trust-shoigu', 'after-comm-mutual-recall', 'after-comm-mutual-stand-down'],
+    followUpDecisions: ['after-comm-accept-data-exchange', 'after-comm-reject-russian-data', 'after-comm-demand-proof', 'after-comm-trust-shoigu', 'after-comm-mutual-recall', 'after-comm-mutual-stand-down', 'after-comm-no-response'],
     consequences: [
       {
         type: 'diplomatic',
@@ -146,7 +146,7 @@ export const initialDecisions: Decision[] = [
     civilianCasualties: 'low',
     requiresConfirmation: false,
     followUpEvents: followUpEventsByDecision['alert-defcon1'],
-    followUpDecisions: ['after-defcon1-launch', 'after-defcon1-wait', 'after-defcon1-communicate'],
+    followUpDecisions: ['after-defcon1-launch', 'after-defcon1-wait', 'after-defcon1-communicate', 'after-defcon1-downgrade'],
     consequences: [
       {
         type: 'military',

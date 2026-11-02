@@ -73,7 +73,7 @@ export const verifyIntelligenceFollowUps: Decision[] = [
     diplomaticImpact: -3,
     civilianCasualties: 'low',
     requiresConfirmation: false,
-    followUpDecisions: ['after-defcon1-launch', 'after-defcon1-wait', 'after-defcon1-communicate'],
+    followUpDecisions: ['after-defcon1-launch', 'after-defcon1-wait', 'after-defcon1-communicate', 'after-defcon1-downgrade'],
     consequences: [
       {
         type: 'military',
@@ -309,7 +309,7 @@ export const defcon1FollowUps: Decision[] = [
   {
     id: 'after-defcon1-downgrade',
     title: 'DEFCON 1 war Fehler - Zurück auf DEFCON 2',
-    description: 'Fast-Launch Incident zeigt: DEFCON 1 ist zu gefährlich. Downgrade auf DEFCON 2. Reduziert Unfallrisiko.',
+    description: 'Maximale Bereitschaft auf beiden Seiten bedeutet: Ein Fehler, ein nervöser Offizier, und es ist vorbei. Downgrade auf DEFCON 2. Senkt Unfallrisiko und Eskalationsdruck - kostet aber Reaktionszeit.',
     category: 'diplomatic',
     militaryEscalation: 4,
     diplomaticImpact: 3,
@@ -423,6 +423,24 @@ export const realignSatellitesFollowUps: Decision[] = [
         type: 'intelligence',
         description: 'Gesunde Skepsis. Aber Zeit läuft ab.',
         severity: 'moderate'
+      }
+    ]
+  },
+  {
+    id: 'after-satellite-no-launches',
+    title: 'Bilder zeigen keine Starts - Gegenseite kontaktieren',
+    description: 'Die Silos an den gemeldeten Startorten sind geschlossen, keine Rauchspuren, keine Brandkrater. Die Infrarot-Daten passen nicht zur Realität. Jetzt mit der Gegenseite reden, bevor jemand anderes die Nerven verliert.',
+    category: 'diplomatic',
+    militaryEscalation: 1,
+    diplomaticImpact: 5,
+    civilianCasualties: 'none',
+    requiresConfirmation: false,
+    followUpDecisions: ['after-verify-communicate', 'final-complete-deescalation', 'after-verify-still-wait'],
+    consequences: [
+      {
+        type: 'intelligence',
+        description: 'Visuelle Beweise widersprechen den Sensoren. Aber: Bilder zeigen nur, was an diesen Orten passiert - nicht auf See.',
+        severity: 'minor'
       }
     ]
   },

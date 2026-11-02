@@ -8,17 +8,81 @@ Dieses Projekt simuliert die Perspektive eines US-Präsidenten, der innerhalb vo
 
 ### Hauptmerkmale
 
-- **4 realistische Szenarien**:
-  - Echter Angriff
+- **5 realistische Szenarien**:
+  - Counterforce-Angriff (Entwaffnungsschlag)
+  - Enthauptungsschlag durch ein abtrünniges U-Boot
   - Fehlalarm (basierend auf historischen Vorfällen)
   - Cyber-Angriff auf Frühwarnsysteme
-  - Mehrdeutige Situation mit widersprüchlichen Daten
+  - Nebel: ein einzelner, nicht gemeldeter Start - die Lage klärt sich nie vollständig
 
 - **Echtzeit-Countdown**: 10 Minuten unter extremem Zeitdruck
 - **Dynamisches Event-System**: Zeitgesteuerte Nachrichten von verschiedenen Quellen
 - **Berater-System**: 7 verschiedene Berater mit unterschiedlichen Perspektiven
 - **Mehrere Entscheidungsoptionen**: Von sofortiger Vergeltung bis zu diplomatischen Lösungen
 - **Detailliertes Debriefing**: Historischer Kontext und Konsequenzen-Analyse
+
+## Spielmechanik: Warum jede Entscheidung zählt
+
+Der Simulator ist kein Quiz mit einer "richtigen" Antwort, sondern ein System, das auf Ihre Befehle reagiert.
+
+### Verdeckte Lage
+Im empfohlenen Modus **"Ernstfall – verdeckte Lage"** wird ein Szenario zufällig gewählt, ohne dass Sie wissen, welches.
+Echter Angriff, Fehlalarm, Cyber-Täuschung oder Enthauptungsschlag? Die Wahrheit erfahren Sie erst im Debriefing.
+Der Trainingsmodus mit bekannten Szenarien bleibt zum Studieren einzelner Situationen erhalten.
+
+### Drei Größen, die sich widersprechen
+| Anzeige | Bedeutung |
+|---|---|
+| **Eskalationsdruck** | Wie die Gegenseite Ihre Maßnahmen liest. Über 50 verstärkt er sich selbst (Sicherheitsdilemma). Bei 100 startet die Gegenseite, auch wenn nie jemand angegriffen hat. Heißer Draht und Rückkanäle bremsen die Spirale, DEFCON-Rückstufung und Bomber-Rückruf senken sie. |
+| **Lagebild** | Wie gut Sie wissen, was wirklich geschieht. Aufklärung und Kommunikation liefern **wahrheitsabhängige Hinweise**, aber erst nach Minuten. |
+| **Vergeltungsfähigkeit** | Was einen echten Angriff überleben würde. Bomber in der Luft, U-Boote auf Tauchstation, delegierte Befehlsgewalt. Jede dieser Maßnahmen treibt aber den Eskalationsdruck. |
+
+### Information braucht Zeit
+Folgeentscheidungen werden erst freigeschaltet, wenn der zugehörige Lagebericht eintrifft. Bis dahin läuft die Uhr,
+und die "stehenden Optionen" (inklusive des nuklearen Knopfs) bleiben jederzeit verfügbar.
+Optionen, die eine Tatsache voraussetzen (z. B. "Datenaustausch bestätigt: Fehlalarm"), erscheinen nur, wenn die Welt sie hergibt.
+
+### Kabinett und Vertrauen
+Jeder Befehl gibt einem Lager recht und brüskiert ein anderes. Das Vertrauen jedes Beraters in Ihre Führung
+ist im Berater-Panel sichtbar. Fällt es unter 50, geht der Berater auf Distanz; unter 35 kommt es zum Bruch, mit Folgen:
+
+| Berater | Folge bei Bruch |
+|---|---|
+| Verteidigungsminister | Leak an die Presse - Eskalationsdruck steigt |
+| STRATCOM-Kommandeur | Militärische Deeskalation (Rückruf, DEFCON-Rückstufung) wirkt nur halb |
+| Außenministerin | Rücktritt - Diplomatie und heißer Draht wirken schwächer |
+| CIA-Direktor | Lageberichte schärfen das Lagebild deutlich weniger |
+| Sicherheitsberater | Lagebild wächst nur halb so schnell von selbst |
+| Vorsitzende der Joint Chiefs | Bereitschaftsbefehle stärken die Vergeltungsfähigkeit nur halb |
+| Stabschefin | Widersprüchliche Kommunikation - Eskalationsdruck steigt |
+
+### Lagekarte
+Die Sensorlage zeigt eine polare Karte (Nordpol im Zentrum, wie bei NORAD) mit gemeldeten Flugbahnen auf
+Großkreisen, Fortschritt in Echtzeit, Einschlägen und eigenen Bombern in Warteschleife. Sie zeigt, was die
+Sensoren melden, nicht, was wirklich geschieht. Auch Fehlalarm und Täuschung erzeugen dort Flugbahnen.
+
+### Nebel
+Im Szenario "Nebel" kann das Lagebild nie über 55 % steigen. Bewertet wird das Urteilsvermögen relativ zu dem,
+was überhaupt wissbar war.
+
+### Auswertung
+Am Ende wird ermittelt, was Ihre Befehle **in dieser Welt** bewirkt haben (über 20 verschiedene Ausgänge), bewertet in vier Dimensionen:
+- **Menschenleben**
+- **Urteilsvermögen**: Passte Ihre Haltung zur Wahrheit, und wussten Sie genug, um so zu entscheiden? Wer mit 20 % Lagebild richtig liegt, hatte Glück.
+- **Eskalationskontrolle**: der höchste erreichte Eskalationsdruck
+- **Abschreckung**: Vergeltungsfähigkeit am Ende
+
+### Code-Struktur der Engine
+```
+src/engine/
+├── truth.ts       # Die verdeckte Wahrheit je Szenario
+├── effects.ts     # Wirkung jedes Befehls + Prämissen für Optionen
+├── clues.ts       # Wahrheitsabhängige Lageberichte
+├── reactions.ts   # Berater reagieren auf Ihre Befehle
+├── advisorTrust.ts # Vertrauen im Kabinett und Folgen eines Bruchs
+├── simulation.ts  # Reiner Simulationskern (tick / applyDecision)
+└── outcome.ts     # Ausgänge, Bewertung, persönliche Erkenntnisse
+```
 
 ## Installation
 
